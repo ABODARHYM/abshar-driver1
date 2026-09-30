@@ -1,0 +1,4103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#e67e22">
+    <meta name="format-detection" content="telephone=no">
+    
+    <title>أبشر بي - لوحة المندوب</title>
+    <meta name="theme-color" content="#e67e22">
+    <meta name="description" content="لوحة المندوب - أبشر بي">
+  <!-- ✅ PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- ✅ PWA Meta Tags -->
+<meta name="theme-color" content="#e67e22">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="أبشر بي">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="أبشر بي">
+<meta name="msapplication-TileColor" content="#e67e22">
+<meta name="msapplication-tap-highlight" content="no">
+
+<!-- ✅ Apple Touch Icons -->
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="./icon-144.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icon-192.png">
+<link rel="apple-touch-icon" sizes="167x167" href="./icon-192.png">
+
+<!-- ✅ PWA Icons -->
+<link rel="icon" type="image/png" sizes="48x48" href="./icon-48.png">
+<link rel="icon" type="image/png" sizes="72x72" href="./icon-72.png">
+<link rel="icon" type="image/png" sizes="96x96" href="./icon-96.png">
+<link rel="icon" type="image/png" sizes="144x144" href="./icon-144.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<link rel="shortcut icon" href="./icon-96.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js"></script>
+    
+    <link rel="stylesheet" href="branding.css">
+    <link rel="stylesheet" href="responsive.css">
+    <script src="zain-core.js"></script>
+    <script src="sound-system.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f0e7 0%, #e8e0d5 100%);
+            min-height: 100vh;
+            padding-bottom: 90px;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #f1f5f9;
+        }
+        
+        /* ============ Header ============ */
+        .driver-header {
+            background: linear-gradient(135deg, #1A1A2E, #e67e22);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(230, 126, 34, 0.3);
+        }
+        
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        
+        .logo-icon {
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .logo-text h1 { color: white; font-size: 17px; font-weight: 800; }
+        .logo-text p {
+            color: #f39c12;
+            font-size: 9px;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+        
+        .header-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+        
+        .network-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.15);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 10px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .network-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #27AE60;
+            animation: pulse 2s infinite;
+        }
+        
+        .network-dot.offline { background: #E74C3C; animation: none; }
+        
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(243, 156, 18, 0.5);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            position: relative;
+            font-family: inherit;
+        }
+        
+        .header-btn:hover { background: #e67e22; transform: translateY(-2px); border-color: #e67e22; }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #E74C3C;
+            color: white;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 0 5px;
+            border: 2px solid #1A1A2E;
+        }
+        
+        /* ============ Bottom Navigation ============ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom, 0));
+            z-index: 999;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        body.dark-mode .bottom-nav {
+            background: #1e1e2e;
+            border-color: #2a2a3a;
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 8px 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            color: #999;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            border-radius: 12px;
+            max-width: 100px;
+        }
+        
+        .nav-item i { font-size: 20px; transition: all 0.3s; }
+        .nav-item span { font-size: 10px; font-weight: 700; }
+        .nav-item.active { color: #e67e22; }
+        .nav-item.active i { transform: scale(1.15); }
+        
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: #e67e22;
+            border-radius: 2px;
+        }
+        
+        .nav-badge {
+            position: absolute;
+            top: 2px;
+            right: 15px;
+            background: #E74C3C;
+            color: white;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            font-size: 10px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid white;
+        }
+        
+        body.dark-mode .nav-badge { border-color: #1e1e2e; }
+        
+        /* ============ Pages ============ */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .page.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .main-content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* ============ Driver Card ============ */
+        .driver-card {
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(230, 126, 34, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .driver-card::before {
+            content: '🛵';
+            position: absolute;
+            font-size: 180px;
+            opacity: 0.1;
+            top: -30px;
+            left: -30px;
+            transform: rotate(-15deg);
+        }
+        
+        .driver-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 15px;
+        }
+        
+        .driver-avatar {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 3px solid rgba(255,255,255,0.5);
+            flex-shrink: 0;
+        }
+        
+        .driver-details { flex: 1; min-width: 0; }
+        .driver-name { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+        .driver-meta {
+            font-size: 12px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .driver-status-box {
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 12px 15px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #27AE60;
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .status-dot.offline { background: #E74C3C; animation: none; }
+        .status-dot.busy { background: #F39C12; }
+        
+        .status-toggle { display: flex; gap: 5px; }
+        
+        .status-btn {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 11px;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            min-height: 34px;
+        }
+        
+        .status-btn:hover { background: rgba(255,255,255,0.4); }
+        .status-btn.active { background: white; color: #e67e22; }
+        
+        /* ============ Work Timer ============ */
+        .work-timer-card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            border-right: 4px solid #27AE60;
+        }
+        
+        body.dark-mode .work-timer-card { background: #1e1e2e; }
+        
+        .work-timer-info { flex: 1; min-width: 120px; }
+        
+        .work-timer-label {
+            font-size: 11px;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .work-timer-value {
+            font-size: 22px;
+            font-weight: 900;
+            color: #27AE60;
+            font-family: 'Poppins', monospace;
+            letter-spacing: 1px;
+            direction: ltr;
+        }
+        
+        .work-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 800;
+            font-family: inherit;
+            font-size: 13px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 44px;
+            color: white;
+            background: linear-gradient(135deg, #27AE60, #2ECC71);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+        
+        .work-btn.stop {
+            background: linear-gradient(135deg, #E74C3C, #C0392B);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .work-btn:hover { transform: translateY(-2px); }
+        
+        /* ============ Stats Grid ============ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body.dark-mode .stat-card { background: #1e1e2e; }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 900;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 3px;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        body.dark-mode .stat-label { color: #94a3b8; }
+        
+        /* ============ Section ============ */
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+        }
+        
+        body.dark-mode .section { background: #1e1e2e; }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        body.dark-mode .section-header { border-color: #2a2a3a; }
+        
+        .section-header h3 {
+            font-size: 16px;
+            color: #e67e22;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+        }
+        
+        .section-header .badge-count {
+            background: #e67e22;
+            color: white;
+            padding: 3px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .refresh-btn {
+            background: transparent;
+            border: 2px solid #e67e22;
+            color: #e67e22;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+            min-height: 36px;
+        }
+        
+        .refresh-btn:hover { background: #e67e22; color: white; }
+        
+        /* ============ Order Card ============ */
+        .order-card {
+            background: #f8f4ed;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+            border-right: 4px solid #e67e22;
+            position: relative;
+        }
+        
+        body.dark-mode .order-card { background: #2a2a3a; }
+        
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.15);
+        }
+        
+        .order-card.personal {
+            border-right-color: #E74C3C;
+            background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+            box-shadow: 0 3px 15px rgba(231, 76, 60, 0.15);
+        }
+        
+        body.dark-mode .order-card.personal {
+            background: linear-gradient(135deg, #2a1a1a, #3a2020);
+        }
+        
+        .order-card.personal::before {
+            content: '⭐ موجه إليك';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            background: linear-gradient(135deg, #E74C3C, #C0392B);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        body.dark-mode .order-header { border-color: #3a3a4a; }
+        
+        .order-code {
+            font-weight: 800;
+            color: #e67e22;
+            font-size: 15px;
+            font-family: 'Poppins', monospace;
+        }
+        
+        .order-price {
+            font-weight: 800;
+            color: #27AE60;
+            font-size: 16px;
+        }
+        
+        .order-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #555;
+        }
+        
+        body.dark-mode .info-row { color: #ccc; }
+        
+        .info-row i { width: 18px; color: #e67e22; font-size: 14px; }
+        .info-row strong { color: #333; }
+        body.dark-mode .info-row strong { color: white; }
+        
+        .distance-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, #fff5e6, #ffe8cc);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #e67e22;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+        
+        .distance-badge.personal {
+            background: linear-gradient(135deg, #ffe8e8, #ffd6d6);
+            color: #C0392B;
+        }
+        
+        .order-actions-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 6px;
+            margin-top: 12px;
+        }
+        
+        .small-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 11px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: white;
+            text-decoration: none;
+            min-height: 36px;
+        }
+        
+        .small-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        
+        .btn-details { background: #e67e22; }
+        .btn-call { background: #25D366; }
+        .btn-map { background: #3498DB; }
+        .btn-whatsapp { background: #128C7E; }
+        
+        .accept-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.3s;
+            font-family: inherit;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+            min-height: 44px;
+        }
+        
+        .accept-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(230, 126, 34, 0.4);
+        }
+        
+        .accept-btn.personal {
+            background: linear-gradient(135deg, #E74C3C, #C0392B);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        /* ============ Active Order ============ */
+        .active-order {
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(230, 126, 34, 0.4);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .active-order::before {
+            content: '🛵';
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.05;
+            top: 20px;
+            left: -40px;
+        }
+        
+        .active-order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .active-order-header h3 {
+            font-size: 17px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .active-order-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .active-info-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .active-info-row i {
+            width: 20px;
+            color: #1A1A2E;
+            font-size: 16px;
+        }
+        
+        .active-info-row a {
+            color: #1A1A2E;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        
+        .map-container {
+            height: 420px;
+            min-height: 400px;
+            border-radius: 15px;
+            margin: 15px 0;
+            overflow: hidden;
+            border: 3px solid rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .map-container {
+                height: 450px;
+                min-height: 420px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .map-container {
+                height: 480px;
+                min-height: 450px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .map-container {
+                height: 550px;
+                min-height: 500px;
+            }
+        }
+        
+        .timer-card {
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            margin: 15px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .timer-label { font-size: 12px; opacity: 0.9; margin-bottom: 5px; }
+        .timer-value {
+            font-size: 32px;
+            font-weight: 900;
+            font-family: 'Poppins', monospace;
+            color: #1A1A2E;
+            letter-spacing: 2px;
+        }
+        
+        .delivery-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .delivery-steps::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 15%;
+            right: 15%;
+            height: 3px;
+            background: rgba(255,255,255,0.3);
+            z-index: 0;
+        }
+        
+        .step { text-align: center; flex: 1; z-index: 1; position: relative; }
+        
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 6px;
+            font-size: 18px;
+            color: white;
+            transition: all 0.3s;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .step.active .step-icon {
+            background: #1A1A2E;
+            color: #f39c12;
+            transform: scale(1.15);
+            border-color: #f39c12;
+        }
+        
+        .step.completed .step-icon { background: #27AE60; border-color: #27AE60; }
+        
+        .step-label { font-size: 11px; opacity: 0.9; font-weight: 600; }
+        .step.active .step-label { font-weight: 800; opacity: 1; }
+        
+        .action-buttons-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .action-btn-large {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 52px;
+        }
+        
+        .btn-pickup {
+            background: linear-gradient(135deg, #1A1A2E, #2A2A3A);
+            box-shadow: 0 4px 15px rgba(26, 26, 46, 0.3);
+        }
+        
+        .btn-deliver {
+            background: linear-gradient(135deg, #27AE60, #2ECC71);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+        
+        .action-btn-large:hover { transform: translateY(-3px); }
+        
+        .reject-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+            font-family: inherit;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+            min-height: 44px;
+        }
+        
+        .reject-btn:hover { background: rgba(231, 76, 60, 0.8); border-color: #E74C3C; }
+        
+        /* ============ Earnings ============ */
+        .earnings-summary {
+            background: linear-gradient(135deg, #27AE60, #2ECC71);
+            color: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .earnings-summary::before {
+            content: '💰';
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.1;
+            top: -40px;
+            left: -30px;
+            transform: rotate(-15deg);
+        }
+        
+        .earnings-label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .earnings-amount {
+            font-size: 42px;
+            font-weight: 900;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 2px;
+        }
+        
+        .earnings-currency {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .period-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+        
+        .period-tab {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 12px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            color: #666;
+            min-height: 36px;
+        }
+        
+        body.dark-mode .period-tab { background: #1e1e2e; color: #cbd5e1; }
+        
+        .period-tab.active {
+            background: linear-gradient(135deg, #27AE60, #2ECC71);
+            color: white;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+        
+        .earnings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .earning-item {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            border-right: 4px solid #27AE60;
+        }
+        
+        body.dark-mode .earning-item { background: #1e1e2e; }
+        
+        .earning-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #27AE60, #2ECC71);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .earning-info { flex: 1; min-width: 0; }
+        .earning-title {
+            font-weight: 800;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        body.dark-mode .earning-title { color: white; }
+        
+        .earning-date {
+            font-size: 11px;
+            color: #999;
+        }
+        
+        .earning-amount {
+            font-weight: 900;
+            color: #27AE60;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            flex-shrink: 0;
+        }
+        
+        /* ============ History ============ */
+        .history-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .history-stat {
+            background: white;
+            padding: 15px 10px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+        
+        body.dark-mode .history-stat { background: #1e1e2e; }
+        
+        .history-stat-value {
+            font-size: 20px;
+            font-weight: 900;
+            font-family: 'Poppins', sans-serif;
+            color: #e67e22;
+            margin-bottom: 3px;
+        }
+        
+        .history-stat-label {
+            font-size: 10px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        body.dark-mode .history-stat-label { color: #94a3b8; }
+        
+        /* ============ Profile ============ */
+        .profile-header {
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-header::before {
+            content: '👤';
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.1;
+            top: -30px;
+            right: -30px;
+            transform: rotate(15deg);
+        }
+        
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            margin: 0 auto 15px;
+            border: 4px solid rgba(255,255,255,0.5);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .profile-name {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .profile-email {
+            font-size: 13px;
+            opacity: 0.9;
+            direction: ltr;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 15px;
+        }
+        
+        .profile-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.25);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .profile-stat {
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+        
+        .profile-stat-value {
+            font-size: 20px;
+            font-weight: 900;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 3px;
+        }
+        
+        .profile-stat-label {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+        
+        .menu-list {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+        
+        body.dark-mode .menu-list { background: #1e1e2e; }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 18px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        body.dark-mode .menu-item { border-color: #2a2a3a; }
+        
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item:hover { background: #f8f4ed; }
+        body.dark-mode .menu-item:hover { background: #2a2a3a; }
+        
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .menu-text { flex: 1; min-width: 0; }
+        .menu-title {
+            font-weight: 800;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        body.dark-mode .menu-title { color: white; }
+        
+        .menu-subtitle { font-size: 11px; color: #999; }
+        .menu-arrow { color: #999; font-size: 14px; }
+        
+        /* ============ Map Page ============ */
+        #fullMap {
+            height: calc(100vh - 200px);
+            min-height: 400px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .map-legend {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        body.dark-mode .map-legend { background: #1e1e2e; }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        /* ============ Modal ============ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            backdrop-filter: blur(8px);
+        }
+        
+        .modal.active { display: flex; }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 92vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        
+        body.dark-mode .modal-content { background: #1e1e2e; }
+        
+        .modal-header {
+            padding: 18px 20px;
+            background: linear-gradient(135deg, #1A1A2E, #e67e22);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .modal-header h3 { font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        
+        .modal-close {
+            cursor: pointer;
+            font-size: 22px;
+            color: rgba(255,255,255,0.8);
+            transition: all 0.3s;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover { color: #E74C3C; transform: rotate(90deg); }
+        
+        .modal-body { padding: 20px; }
+        
+        .detail-section {
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 2px dashed #f0f0f0;
+        }
+        
+        body.dark-mode .detail-section { border-color: #2a2a3a; }
+        
+        .detail-section:last-child { border-bottom: none; }
+        
+        .detail-section-title {
+            color: #e67e22;
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 13px;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .detail-label {
+            color: #666;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        
+        body.dark-mode .detail-label { color: #94a3b8; }
+        
+        .detail-label i { color: #e67e22; width: 16px; font-size: 12px; }
+        
+        .detail-value {
+            color: #1A1A2E;
+            font-weight: 800;
+            text-align: left;
+            word-break: break-word;
+        }
+        
+        body.dark-mode .detail-value { color: white; }
+        
+        .detail-value.ltr { direction: ltr; }
+        
+        .item-box {
+            background: #f8f4ed;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        body.dark-mode .item-box { background: #2a2a3a; }
+        
+        .item-box img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .item-info-detail { flex: 1; min-width: 0; }
+        .item-info-detail strong {
+            display: block;
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        body.dark-mode .item-info-detail strong { color: white; }
+        
+        .item-info-detail small { font-size: 11px; color: #999; }
+        .item-total {
+            font-weight: 800;
+            color: #27AE60;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .totals-box {
+            background: linear-gradient(135deg, #fff5e6, #ffe8cc);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 12px;
+        }
+        
+        body.dark-mode .totals-box { background: #2a2a3a; }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        
+        .total-row.discount { color: #27AE60; }
+        
+        .total-row.final {
+            border-top: 2px solid #e67e22;
+            padding-top: 12px;
+            margin-top: 8px;
+            font-size: 18px;
+            font-weight: 900;
+            color: #e67e22;
+        }
+        
+        .address-box {
+            background: #fff5e6;
+            border-radius: 12px;
+            padding: 12px;
+            border-right: 4px solid #e67e22;
+            font-size: 12px;
+            color: #C0392B;
+            line-height: 1.7;
+            word-break: break-all;
+        }
+        
+        body.dark-mode .address-box { background: #2a2010; color: #f39c12; }
+        
+        .address-box a {
+            color: #e67e22;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        
+        .modal-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        body.dark-mode .modal-actions { border-color: #2a2a3a; }
+        
+        .modal-action-btn {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            font-family: inherit;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: white;
+            min-height: 44px;
+            text-decoration: none;
+        }
+        
+        .modal-action-btn:hover { transform: translateY(-2px); }
+        
+        .modal-btn-call { background: linear-gradient(135deg, #3498DB, #2980B9); }
+        .modal-btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
+        .modal-btn-map { background: linear-gradient(135deg, #F39C12, #E67E22); }
+        .modal-btn-print { background: linear-gradient(135deg, #9B59B6, #8E44AD); }
+        
+        /* ============ Loading & Empty ============ */
+        .loading-spinner { text-align: center; padding: 30px 20px; }
+        .loading-spinner i {
+            font-size: 35px;
+            color: #e67e22;
+            animation: spin 1s linear infinite;
+        }
+        .loading-spinner p { margin-top: 15px; color: #999; font-size: 14px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .empty-state { text-align: center; padding: 40px 20px; }
+        .empty-state .emoji { font-size: 60px; margin-bottom: 15px; opacity: 0.5; }
+        .empty-state h3 { color: #e67e22; margin-bottom: 8px; font-size: 16px; }
+        .empty-state p { color: #999; font-size: 13px; }
+        
+        .notification-banner {
+            background: linear-gradient(135deg, #E74C3C, #C0392B);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
+            animation: slideDown 0.3s ease;
+        }
+        
+        .notification-banner.show { display: flex; }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .notification-banner i { font-size: 26px; animation: bell 1s infinite; }
+        
+        @keyframes bell {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-15deg); }
+            75% { transform: rotate(15deg); }
+        }
+        
+        .notification-banner div { flex: 1; }
+        .notification-banner strong { display: block; font-size: 15px; margin-bottom: 3px; }
+        .notification-banner small { font-size: 12px; opacity: 0.9; }
+        
+        /* ============ FCM Status Badge ============ */
+        .fcm-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            background: rgba(39, 174, 96, 0.15);
+            color: #27AE60;
+        }
+        
+        .fcm-status.inactive {
+            background: rgba(231, 76, 60, 0.15);
+            color: #E74C3C;
+        }
+        
+        .fcm-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #27AE60;
+            animation: pulse 2s infinite;
+        }
+        
+        .fcm-status.inactive .fcm-dot {
+            background: #E74C3C;
+            animation: none;
+        }
+        
+        /* ============ Responsive ============ */
+        @media (max-width: 768px) {
+            .driver-header { flex-direction: column; text-align: center; }
+            .main-content { padding: 12px; }
+            .stats-grid { gap: 10px; }
+            .stat-card { padding: 12px; }
+            .stat-value { font-size: 18px; }
+            .status-toggle { width: 100%; }
+            .status-btn { flex: 1; padding: 7px 8px; font-size: 10px; }
+            .timer-value { font-size: 26px; }
+            .modal-content { max-height: 95vh; border-radius: 20px 20px 0 0; }
+            .modal { padding: 0; align-items: flex-end; }
+            .modal-actions { grid-template-columns: repeat(2, 1fr); }
+            .order-actions-row { grid-template-columns: repeat(2, 1fr); }
+            .earnings-amount { font-size: 34px; }
+            .history-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .history-stat { padding: 12px 6px; }
+            .history-stat-value { font-size: 16px; }
+        }
+        
+        @media (max-width: 480px) {
+            .modal-actions { grid-template-columns: 1fr; }
+            .profile-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .profile-stat { padding: 10px 5px; }
+            .profile-stat-value { font-size: 16px; }
+            .earnings-amount { font-size: 30px; }
+        }
+    </style>
+</head>
+<body class="has-bottom-nav">
+    <!-- ============ Header ============ -->
+    <div class="driver-header">
+        <div class="logo-area">
+            <div class="logo-icon">🛵</div>
+            <div class="logo-text">
+                <h1>لوحة المندوب</h1>
+                <p>ABSHER BE</p>
+            </div>
+        </div>
+        
+        <div class="header-actions">
+            <div class="network-status">
+                <span class="network-dot" id="networkDot"></span>
+                <span id="networkText">متصل</span>
+            </div>
+            
+            <!-- ✅ مؤشر حالة FCM -->
+            <div class="fcm-status" id="fcmStatusBadge">
+                <span class="fcm-dot"></span>
+                <span id="fcmStatusText">FCM</span>
+            </div>
+            
+            <button class="header-btn" onclick="showNotifications()">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notifBadge">0</span>
+            </button>
+            
+            <button class="header-btn" onclick="Zain.toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- ============ Page: Home ============ -->
+    <div class="page active" id="page-home">
+        <div class="main-content">
+            <div class="notification-banner" id="notificationBanner">
+                <i class="fas fa-bell"></i>
+                <div>
+                    <strong id="notifTitle">طلب جديد!</strong>
+                    <small id="notifBody">لديك طلب موجه إليك</small>
+                </div>
+            </div>
+            
+            <div class="driver-card" id="driverCard">
+                <div class="loading-spinner" style="color: white;">
+                    <i class="fas fa-spinner fa-spin" style="color: white;"></i>
+                    <p style="color: white;">جاري التحميل...</p>
+                </div>
+            </div>
+            
+            <div class="work-timer-card">
+                <div class="work-timer-info">
+                    <div class="work-timer-label">⏱️ وقت العمل اليوم</div>
+                    <div class="work-timer-value" id="workTimer">00:00:00</div>
+                </div>
+                <button class="work-btn" id="workBtn" onclick="toggleWork()">
+                    <i class="fas fa-play"></i>
+                    بدء الدوام
+                </button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(39, 174, 96, 0.15); color: #27AE60;">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-value" style="color: #27AE60;" id="todayEarnings">0</div>
+                    <div class="stat-label">أرباح اليوم (ر.ي)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(52, 152, 219, 0.15); color: #3498DB;">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-value" style="color: #3498DB;" id="todayDeliveries">0</div>
+                    <div class="stat-label">طلبات اليوم</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(243, 156, 18, 0.15); color: #F39C12;">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <div class="stat-value" style="color: #F39C12;" id="todayDistance">0 كم</div>
+                    <div class="stat-label">المسافة اليوم</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(212, 175, 55, 0.15); color: #D4AF37;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-value" style="color: #D4AF37;" id="driverRating">5.0</div>
+                    <div class="stat-label">تقييمي</div>
+                </div>
+            </div>
+            
+            <div id="activeOrderSection" style="display: none;"></div>
+            
+            <div id="personalOrdersSection" style="display: none;">
+                <div class="section">
+                    <div class="section-header">
+                        <h3>
+                            <i class="fas fa-star" style="color: #E74C3C;"></i>
+                            طلبات موجهة إليك
+                            <span class="badge-count" id="personalCount" style="background: #E74C3C;">0</span>
+                        </h3>
+                    </div>
+                    <div id="personalOrdersList"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <h3>
+                        <i class="fas fa-list"></i>
+                        الطلبات المتاحة
+                        <span class="badge-count" id="availableCount">0</span>
+                    </h3>
+                    <button class="refresh-btn" onclick="loadOrders(true)">
+                        <i class="fas fa-sync-alt"></i> تحديث
+                    </button>
+                </div>
+                <div id="availableOrdersList">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>جاري التحميل...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============ Page: Earnings ============ -->
+    <div class="page" id="page-earnings">
+        <div class="main-content">
+            <div class="earnings-summary">
+                <div class="earnings-label">💰 إجمالي الأرباح</div>
+                <div class="earnings-amount" id="totalEarnings">0</div>
+                <div class="earnings-currency">ريال يمني</div>
+            </div>
+            
+            <div class="period-tabs">
+                <button class="period-tab active" onclick="changePeriod('today', this)">📅 اليوم</button>
+                <button class="period-tab" onclick="changePeriod('week', this)">📅 الأسبوع</button>
+                <button class="period-tab" onclick="changePeriod('month', this)">📅 الشهر</button>
+                <button class="period-tab" onclick="changePeriod('all', this)">📅 الكل</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(39, 174, 96, 0.15); color: #27AE60;">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stat-value" style="color: #27AE60;" id="periodEarnings">0</div>
+                    <div class="stat-label">أرباح الفترة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(52, 152, 219, 0.15); color: #3498DB;">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-value" style="color: #3498DB;" id="periodDeliveries">0</div>
+                    <div class="stat-label">عدد التوصيلات</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(243, 156, 18, 0.15); color: #F39C12;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-value" style="color: #F39C12;" id="avgDelivery">0</div>
+                    <div class="stat-label">متوسط التوصيلة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(155, 89, 182, 0.15); color: #9B59B6;">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <div class="stat-value" style="color: #9B59B6;" id="periodDistance">0 كم</div>
+                    <div class="stat-label">المسافة المقطوعة</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <h3><i class="fas fa-list"></i> تفاصيل الأرباح</h3>
+                </div>
+                <div class="earnings-list" id="earningsList">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============ Page: History ============ -->
+    <div class="page" id="page-history">
+        <div class="main-content">
+            <div class="history-stats">
+                <div class="history-stat">
+                    <div class="history-stat-value" id="totalDeliveries">0</div>
+                    <div class="history-stat-label">إجمالي التوصيلات</div>
+                </div>
+                <div class="history-stat">
+                    <div class="history-stat-value" id="completedToday">0</div>
+                    <div class="history-stat-label">مكتملة اليوم</div>
+                </div>
+                <div class="history-stat">
+                    <div class="history-stat-value" id="completionRate">100%</div>
+                    <div class="history-stat-label">نسبة القبول</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <h3><i class="fas fa-history"></i> سجل التوصيلات</h3>
+                    <button class="refresh-btn" onclick="loadHistory()">
+                        <i class="fas fa-sync-alt"></i> تحديث
+                    </button>
+                </div>
+                <div id="historyList">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============ Page: Map ============ -->
+    <div class="page" id="page-map">
+        <div class="main-content">
+            <div id="fullMap"></div>
+            
+            <div class="map-legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #e67e22;"></div>
+                    <span>موقعك</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #3498DB;"></div>
+                    <span>طلبات قريبة</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #E74C3C;"></div>
+                    <span>موجه إليك</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============ Page: Profile ============ -->
+    <div class="page" id="page-profile">
+        <div class="main-content">
+            <div class="profile-header">
+                <div class="profile-avatar">🛵</div>
+                <div class="profile-name" id="profileName">مندوب</div>
+                <div class="profile-email" id="profileEmail">-</div>
+                <div class="profile-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    مندوب أبشر بي
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-value" id="profileTotalDeliveries">0</div>
+                        <div class="profile-stat-label">توصيلة</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value" id="profileRating">5.0</div>
+                        <div class="profile-stat-label">تقييم</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value" id="profileTotalEarnings">0</div>
+                        <div class="profile-stat-label">إجمالي الأرباح</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-list">
+                <div class="menu-item" onclick="editProfile()">
+                    <div class="menu-icon"><i class="fas fa-user-edit"></i></div>
+                    <div class="menu-text">
+                        <div class="menu-title">تعديل الملف الشخصي</div>
+                        <div class="menu-subtitle">الاسم، الهاتف، الصورة</div>
+                    </div>
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </div>
+                
+                <div class="menu-item" onclick="testSound()">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #9B59B6, #8E44AD);">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+                    <div class="menu-text">
+                        <div class="menu-title">اختبار صوت الإشعار</div>
+                        <div class="menu-subtitle">تأكد من أن الصوت يعمل</div>
+                    </div>
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </div>
+                
+                <div class="menu-item" onclick="checkFCMStatus()">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #3498DB, #2980B9);">
+                        <i class="fas fa-satellite-dish"></i>
+                    </div>
+                    <div class="menu-text">
+                        <div class="menu-title">حالة FCM</div>
+                        <div class="menu-subtitle">الإشعارات في الخلفية</div>
+                    </div>
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </div>
+                
+                <div class="menu-item" onclick="showNotifications()">
+                    <div class="menu-icon"><i class="fas fa-bell"></i></div>
+                    <div class="menu-text">
+                        <div class="menu-title">الإشعارات</div>
+                        <div class="menu-subtitle">آخر التنبيهات</div>
+                    </div>
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </div>
+                
+                <div class="menu-item" onclick="showAbout()">
+                    <div class="menu-icon"><i class="fas fa-info-circle"></i></div>
+                    <div class="menu-text">
+                        <div class="menu-title">عن التطبيق</div>
+                        <div class="menu-subtitle">أبشر بي - الإصدار 10.6.0</div>
+                    </div>
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </div>
+                
+                <div class="menu-item" onclick="contactSupport()">
+                    <div class="menu-icon"><i class="fas fa-headset"></i></div>
+                    <div class="menu-text">
+                        <div class="menu-title">الدعم الفني</div>
+                        <div class="menu-subtitle">تواصل معنا</div>
+                    </div>
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </div>
+                
+                <div class="menu-item" onclick="confirmLogout()">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #E74C3C, #C0392B);">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <div class="menu-text">
+                        <div class="menu-title" style="color: #E74C3C;">تسجيل الخروج</div>
+                        <div class="menu-subtitle">إنهاء الجلسة</div>
+                    </div>
+                    <i class="fas fa-chevron-left menu-arrow"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============ Bottom Navigation ============ -->
+    <div class="bottom-nav">
+        <button class="nav-item active" data-page="home" onclick="switchPage('home')">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </button>
+        
+        <button class="nav-item" data-page="earnings" onclick="switchPage('earnings')">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>الأرباح</span>
+        </button>
+        
+        <button class="nav-item" data-page="history" onclick="switchPage('history')">
+            <i class="fas fa-history"></i>
+            <span>السجل</span>
+        </button>
+        
+        <button class="nav-item" data-page="map" onclick="switchPage('map')">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>الخريطة</span>
+            <span class="nav-badge" id="navMapBadge" style="display:none;">0</span>
+        </button>
+        
+        <button class="nav-item" data-page="profile" onclick="switchPage('profile')">
+            <i class="fas fa-user"></i>
+            <span>حسابي</span>
+        </button>
+    </div>
+    
+    <!-- ============ Order Details Modal ============ -->
+    <div class="modal" id="orderDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="orderModalTitle">
+                    <i class="fas fa-receipt"></i>
+                    تفاصيل الطلب
+                </h3>
+                <i class="fas fa-times modal-close" onclick="closeOrderModal()"></i>
+            </div>
+            <div class="modal-body" id="orderModalBody">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============ Profile Edit Modal ============ -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-edit"></i> تعديل الملف الشخصي</h3>
+                <i class="fas fa-times modal-close" onclick="closeProfileModal()"></i>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:700;font-size:13px;color:#e67e22;">الاسم الكامل</label>
+                    <input type="text" id="editName" style="width:100%;padding:12px 14px;border:2px solid #e5e5e5;border-radius:12px;font-family:inherit;font-size:16px;background:#fafafa;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:700;font-size:13px;color:#e67e22;">رقم الهاتف</label>
+                    <input type="tel" id="editPhone" dir="ltr" style="width:100%;padding:12px 14px;border:2px solid #e5e5e5;border-radius:12px;font-family:inherit;font-size:16px;background:#fafafa;">
+                </div>
+                <button onclick="saveProfile()" style="width:100%;padding:14px;background:linear-gradient(135deg,#e67e22,#f39c12);color:white;border:none;border-radius:25px;cursor:pointer;font-weight:800;font-family:inherit;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;">
+                    <i class="fas fa-save"></i> حفظ التعديلات
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // zain-driver/drivers.html - لوحة المندوب (أبشر بي + FCM)
+        // الإصدار: 10.6.0
+        // ================================================================
+        
+        let currentDriver = null;
+        let currentOrder = null;
+        let allOrders = [];
+        let personalOrders = [];
+        let availableOrders = [];
+        let allDriverOrders = [];
+        let completedOrders = [];
+        let map = null;
+        let fullMap = null;
+        let mapMarkers = [];
+        let driverMarker = null;
+        let timerInterval = null;
+        let workTimerInterval = null;
+        let watchId = null;
+        let unsubscribeOrders = null;
+        let workStartTime = null;
+        let workSeconds = 0;
+        let currentPeriod = 'today';
+        let fcmInitialized = false;
+        
+        // ================================================================
+        // 🔊 نظام الصوت - مغلف لـ sound-system.js
+        // ================================================================
+        // ✅ جميع دوال الصوت الآن في sound-system.js
+        // ✅ للاستخدام: window.AbsharSound.play('bell')
+        // ✅ للاختبار: window.AbsharSound.test()
+        // ✅ FCM: window.AbsharSound.initFCM(userId)
+        // ================================================================
+        
+        function unlockAudio() {
+            if (window.AbsharSound) {
+                window.AbsharSound.unlock();
+            }
+        }
+        
+        function playSound(type) {
+            console.log('🔊 تشغيل صوت:', type);
+            
+            if (window.AbsharSound) {
+                window.AbsharSound.play(type || 'bell');
+                console.log('✅ تم تشغيل الصوت');
+            } else {
+                console.warn('⚠️ نظام الصوت غير محمّل');
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.frequency.value = 800;
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } catch (e) {}
+            }
+        }
+        
+        function stopAlarmMP3() {
+            if (window.AbsharSound) {
+                window.AbsharSound.stop();
+            }
+        }
+        
+        function testSound() {
+            Zain.toast('🔔 اختبار نغمة الجرس...', 'info');
+            
+            if (window.AbsharSound) {
+                window.AbsharSound.test();
+            } else {
+                Zain.toast('نظام الصوت غير محمّل', 'error');
+            }
+        }
+        
+        async function registerServiceWorker() {
+            if (window.AbsharSound) {
+                await window.AbsharSound.registerSW();
+                await window.AbsharSound.requestPermission();
+            }
+        }
+        
+        // ================================================================
+        // 🆕 FCM Functions
+        // ================================================================
+        
+        async function initFCMForDriver() {
+            if (!currentDriver || !currentDriver.id) {
+                console.warn('⚠️ [FCM] لا يوجد مندوب مسجّل');
+                return false;
+            }
+            
+            if (!window.AbsharSound || !window.AbsharSound.initFCM) {
+                console.warn('⚠️ [FCM] sound-system.js غير محدّث');
+                return false;
+            }
+            
+            try {
+                console.log('📬 [FCM] بدء التهيئة للمندوب:', currentDriver.id);
+                
+                const success = await window.AbsharSound.initFCM(currentDriver.id);
+                
+                if (success) {
+                    fcmInitialized = true;
+                    updateFCMBadge(true);
+                    console.log('✅ [FCM] تم التهيئة بنجاح');
+                    return true;
+                } else {
+                    fcmInitialized = false;
+                    updateFCMBadge(false);
+                    console.warn('⚠️ [FCM] فشل التهيئة');
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ [FCM] خطأ:', error);
+                fcmInitialized = false;
+                updateFCMBadge(false);
+                return false;
+            }
+        }
+        
+        function updateFCMBadge(active) {
+            const badge = document.getElementById('fcmStatusBadge');
+            const text = document.getElementById('fcmStatusText');
+            
+            if (!badge || !text) return;
+            
+            if (active) {
+                badge.classList.remove('inactive');
+                text.textContent = 'FCM ✓';
+                badge.title = 'الإشعارات في الخلفية مفعّلة';
+            } else {
+                badge.classList.add('inactive');
+                text.textContent = 'FCM ✗';
+                badge.title = 'الإشعارات في الخلفية غير مفعّلة';
+            }
+        }
+        
+        async function checkFCMStatus() {
+            if (!window.AbsharSound || !window.AbsharSound.getFCMStatus) {
+                Zain.toast('⚠️ نظام FCM غير محمّل', 'error');
+                return;
+            }
+            
+            const status = window.AbsharSound.getFCMStatus();
+            const token = window.AbsharSound.getFCMToken();
+            
+            console.log('📊 [FCM] الحالة:', status);
+            
+            let message = '📬 حالة FCM:\n\n';
+            message += '✅ مُهيّأ: ' + (status.initialized ? 'نعم' : 'لا') + '\n';
+            message += '🔑 Token: ' + (status.hasToken ? 'موجود' : 'غير موجود') + '\n';
+            message += '👤 المستخدم: ' + (status.userId || 'غير معروف') + '\n';
+            
+            if (token) {
+                message += '\n🔑 Token:\n' + token.substring(0, 50) + '...';
+            }
+            
+            if (status.initialized) {
+                Zain.toast('✅ FCM يعمل', 'success');
+                alert(message);
+            } else {
+                Zain.toast('⚠️ FCM غير مفعّل - جاري المحاولة...', 'warning');
+                
+                if (currentDriver && currentDriver.id) {
+                    await initFCMForDriver();
+                } else {
+                    alert(message + '\n\n💡 يجب تسجيل الدخول أولاً');
+                }
+            }
+        }
+        
+        // ==================== Init ====================
+        async function init() {
+            console.log('%c🚴 أبشر بي - لوحة المندوب v10.6.0 (FCM)', 
+                'color: #e67e22; font-weight: bold; font-size: 14px;');
+            
+            if (typeof Zain === 'undefined') {
+                setTimeout(init, 200);
+                return;
+            }
+            
+            const user = await new Promise(function(resolve) {
+                if (Zain.auth.currentUser) {
+                    resolve(Zain.auth.currentUser);
+                    return;
+                }
+                const unsub = Zain.auth.onAuthStateChanged(function(u) {
+                    unsub();
+                    resolve(u);
+                });
+                setTimeout(function() {
+                    unsub();
+                    resolve(Zain.auth.currentUser);
+                }, 5000);
+            });
+            
+            if (!user) {
+                window.location.replace('login.html');
+                return;
+            }
+            
+            try {
+                const driverDoc = await Zain.db.collection('drivers').doc(user.uid).get();
+                
+                if (!driverDoc.exists) {
+                    Zain.toast('ليس لديك حساب مندوب', 'error');
+                    await Zain.auth.signOut();
+                    setTimeout(function() {
+                        window.location.replace('login.html');
+                    }, 1500);
+                    return;
+                }
+                
+                currentDriver = Object.assign({ id: user.uid }, driverDoc.data());
+                currentDriver.email = user.email;
+                console.log('%c✅ مرحباً ' + (currentDriver.name || 'مندوب'), 
+                    'color: #27AE60; font-weight: bold;');
+                
+            } catch (e) {
+                console.error('❌ خطأ:', e);
+                return;
+            }
+            
+            loadWorkSession();
+            renderDriverCard();
+            renderProfile();
+            loadStats();
+            loadAllDriverOrders();
+            await loadOrders();
+            startLocationTracking();
+            listenToOrders();
+            setupNetworkStatus();
+            
+            registerServiceWorker();
+            
+            // ✅ تهيئة FCM
+            setTimeout(function() {
+                initFCMForDriver();
+            }, 3000);
+            
+            // ✅ تفعيل الصوت عند أول تفاعل
+            ['click', 'touchstart', 'keydown'].forEach(function(event) {
+                document.addEventListener(event, function() {
+                    unlockAudio();
+                }, { once: true });
+            });
+            
+            setTimeout(unlockAudio, 1000);
+            
+            updateNotifications();
+            
+            // ✅ الاستماع لرسائل من Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.addEventListener('message', function(event) {
+                    const data = event.data || {};
+                    console.log('📨 [SW→App] رسالة:', data.type);
+                    
+                    if (data.type === 'OPEN_ORDER' && data.orderId) {
+                        console.log('🎯 فتح الطلب:', data.orderId);
+                        viewOrderDetails(data.orderId);
+                    }
+                    
+                    if (data.type === 'PLAY_SOUND') {
+                        playSound(data.soundType || 'bell');
+                    }
+                    
+                    if (data.type === 'STOP_SOUND_NOW') {
+                        stopAlarmMP3();
+                    }
+                    
+                    if (data.type === 'NOTIFICATION_CLOSED') {
+                        stopAlarmMP3();
+                    }
+                    
+                    if (data.type === 'SYNC_ORDERS' || data.type === 'PERIODIC_UPDATE') {
+                        loadOrders();
+                    }
+                });
+            }
+            
+            console.log('%c🎉 لوحة المندوب جاهزة!', 
+                'color: #27AE60; font-weight: bold;');
+        }
+        // ✅ إعادة تهيئة FCM في PWA
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    console.log('📱 يعمل كـ PWA مثبّت');
+    
+    // انتظر تحميل Firebase
+    setTimeout(async function() {
+        // اطلب إذن الإشعارات
+        if ('Notification' in window) {
+            if (Notification.permission === 'default') {
+                await Notification.requestPermission();
+            }
+            
+            if (Notification.permission === 'granted') {
+                console.log('✅ إذن الإشعارات موجود');
+                
+                // أعد تهيئة FCM
+                if (window.AbsharSound && window.AbsharSound.initFCM && currentDriver) {
+                    console.log('📬 إعادة تهيئة FCM في PWA...');
+                    await window.AbsharSound.initFCM(currentDriver.id);
+                }
+            }
+        }
+    }, 2000);
+      }
+        // ==================== Page Switching ====================
+        function switchPage(page) {
+            document.querySelectorAll('.page').forEach(function(p) {
+                p.classList.remove('active');
+            });
+            
+            const targetPage = document.getElementById('page-' + page);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            document.querySelectorAll('.nav-item').forEach(function(item) {
+                item.classList.toggle('active', item.dataset.page === page);
+            });
+            
+            if (page === 'earnings') {
+                loadEarnings();
+            } else if (page === 'history') {
+                loadHistory();
+            } else if (page === 'map') {
+                setTimeout(initFullMap, 200);
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // ==================== Work Timer ====================
+        function loadWorkSession() {
+            const saved = localStorage.getItem('abshar_work_' + currentDriver.id);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    workStartTime = data.startTime ? new Date(data.startTime) : null;
+                    workSeconds = data.seconds || 0;
+                    
+                    if (workStartTime) {
+                        updateWorkTimer();
+                        startWorkTimer();
+                        updateWorkButton(true);
+                    }
+                } catch (e) {}
+            }
+        }
+        
+        function toggleWork() {
+            if (workStartTime) {
+                stopWork();
+            } else {
+                startWork();
+            }
+        }
+        
+        function startWork() {
+            workStartTime = new Date();
+            workSeconds = 0;
+            
+            updateWorkTimer();
+            startWorkTimer();
+            updateWorkButton(true);
+            
+            Zain.toast('✅ بدأ الدوام', 'success');
+            saveWorkSession();
+        }
+        
+        function stopWork() {
+            if (!confirm('هل تريد إنهاء الدوام؟')) return;
+            
+            if (workTimerInterval) clearInterval(workTimerInterval);
+            
+            const session = {
+                driverId: currentDriver.id,
+                startTime: workStartTime.toISOString(),
+                endTime: new Date().toISOString(),
+                seconds: workSeconds,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            Zain.db.collection('work_sessions').add(session).catch(function() {});
+            
+            workStartTime = null;
+            workSeconds = 0;
+            
+            document.getElementById('workTimer').textContent = '00:00:00';
+            updateWorkButton(false);
+            
+            localStorage.removeItem('abshar_work_' + currentDriver.id);
+            
+            Zain.toast('✅ تم إنهاء الدوام', 'info');
+        }
+        
+        function startWorkTimer() {
+            if (workTimerInterval) clearInterval(workTimerInterval);
+            
+            workTimerInterval = setInterval(function() {
+                workSeconds++;
+                updateWorkTimer();
+                saveWorkSession();
+            }, 1000);
+        }
+        
+        function updateWorkTimer() {
+            const hours = Math.floor(workSeconds / 3600);
+            const minutes = Math.floor((workSeconds % 3600) / 60);
+            const seconds = workSeconds % 60;
+            
+            document.getElementById('workTimer').textContent = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+        }
+        
+        function updateWorkButton(isWorking) {
+            const btn = document.getElementById('workBtn');
+            
+            if (isWorking) {
+                btn.className = 'work-btn stop';
+                btn.innerHTML = '<i class="fas fa-stop"></i> إنهاء الدوام';
+            } else {
+                btn.className = 'work-btn';
+                btn.innerHTML = '<i class="fas fa-play"></i> بدء الدوام';
+            }
+        }
+        
+        function saveWorkSession() {
+            if (!currentDriver) return;
+            
+            try {
+                localStorage.setItem('abshar_work_' + currentDriver.id, JSON.stringify({
+                    startTime: workStartTime ? workStartTime.toISOString() : null,
+                    seconds: workSeconds
+                }));
+            } catch (e) {}
+        }
+        
+        // ==================== Network Status ====================
+        function setupNetworkStatus() {
+            function update() {
+                const dot = document.getElementById('networkDot');
+                const text = document.getElementById('networkText');
+                
+                if (navigator.onLine) {
+                    dot.classList.remove('offline');
+                    text.textContent = 'متصل';
+                } else {
+                    dot.classList.add('offline');
+                    text.textContent = 'غير متصل';
+                }
+            }
+            
+            window.addEventListener('online', update);
+            window.addEventListener('offline', update);
+            update();
+        }
+        
+        // ==================== Driver Card ====================
+        function renderDriverCard() {
+            const status = currentDriver.status || 'offline';
+            const statusMap = {
+                online: { emoji: '🟢', text: 'متصل', class: '' },
+                offline: { emoji: '🔴', text: 'غير متصل', class: 'offline' },
+                busy: { emoji: '🟡', text: 'مشغول', class: 'busy' }
+            };
+            const statusInfo = statusMap[status] || statusMap.offline;
+            
+            document.getElementById('driverCard').innerHTML = 
+                '<div class="driver-info">' +
+                    '<div class="driver-avatar">🛵</div>' +
+                    '<div class="driver-details">' +
+                        '<div class="driver-name">' + (currentDriver.name || 'مندوب') + '</div>' +
+                        '<div class="driver-meta">' +
+                            '<span><i class="fas fa-star"></i> ' + (currentDriver.rating || 5) + '</span>' +
+                            '<span><i class="fas fa-truck"></i> ' + (currentDriver.totalDeliveries || 0) + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                
+                '<div class="driver-status-box">' +
+                    '<div class="status-indicator">' +
+                        '<span class="status-dot ' + statusInfo.class + '"></span>' +
+                        '<span>' + statusInfo.emoji + ' ' + statusInfo.text + '</span>' +
+                    '</div>' +
+                    
+                    '<div class="status-toggle">' +
+                        '<button class="status-btn ' + (status === 'online' ? 'active' : '') + '" onclick="setStatus(\'online\')">🟢 متصل</button>' +
+                        '<button class="status-btn ' + (status === 'busy' ? 'active' : '') + '" onclick="setStatus(\'busy\')">🟡 مشغول</button>' +
+                        '<button class="status-btn ' + (status === 'offline' ? 'active' : '') + '" onclick="setStatus(\'offline\')">🔴 غير متصل</button>' +
+                    '</div>' +
+                '</div>';
+        }
+        
+        // ==================== Profile ====================
+        function renderProfile() {
+            document.getElementById('profileName').textContent = currentDriver.name || 'مندوب';
+            document.getElementById('profileEmail').textContent = currentDriver.email || '-';
+            document.getElementById('profileRating').textContent = (currentDriver.rating || 5).toFixed(1);
+            document.getElementById('profileTotalDeliveries').textContent = currentDriver.totalDeliveries || 0;
+            
+            const totalEarnings = completedOrders.reduce(function(sum, o) {
+                return sum + (o.deliveryFee || 500);
+            }, 0);
+            document.getElementById('profileTotalEarnings').textContent = totalEarnings.toLocaleString();
+        }
+        
+        // ==================== Set Status ====================
+        async function setStatus(status) {
+            if (!currentDriver) return;
+            
+            try {
+                await Zain.db.collection('drivers').doc(currentDriver.id).update({
+                    status: status,
+                    lastSeen: new Date().toISOString()
+                });
+                
+                currentDriver.status = status;
+                
+                const statusNames = {
+                    online: 'متصل',
+                    busy: 'مشغول',
+                    offline: 'غير متصل'
+                };
+                
+                Zain.toast('✅ تم تغيير الحالة إلى ' + statusNames[status], 'success');
+                renderDriverCard();
+                loadOrders();
+                
+            } catch (error) {
+                console.error('خطأ:', error);
+                Zain.toast('حدث خطأ', 'error');
+            }
+        }
+        
+        // ==================== Load Stats ====================
+        async function loadStats() {
+            if (!currentDriver) return;
+            
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                
+                const snap = await Zain.db.collection('orders')
+                    .where('driverId', '==', currentDriver.id)
+                    .where('status', '==', 'delivered')
+                    .get();
+                
+                const todayDeliveries = snap.docs.filter(function(doc) {
+                    const data = doc.data();
+                    return data.deliveredAt && data.deliveredAt.startsWith(today);
+                });
+                
+                const todayEarnings = todayDeliveries.reduce(function(sum, doc) {
+                    return sum + (doc.data().deliveryFee || 500);
+                }, 0);
+                
+                document.getElementById('todayDeliveries').textContent = todayDeliveries.length;
+                document.getElementById('todayEarnings').textContent = todayEarnings.toLocaleString();
+                document.getElementById('todayDistance').textContent = (todayDeliveries.length * 3.5).toFixed(1) + ' كم';
+                document.getElementById('driverRating').textContent = (currentDriver.rating || 5).toFixed(1);
+                
+            } catch (e) {
+                console.error('خطأ في الإحصائيات:', e);
+            }
+        }
+        
+        // ==================== Load All Driver Orders ====================
+        async function loadAllDriverOrders() {
+            try {
+                const snap = await Zain.db.collection('orders')
+                    .where('driverId', '==', currentDriver.id)
+                    .get();
+                
+                allDriverOrders = snap.docs
+                    .map(function(d) { return Object.assign({ id: d.id }, d.data()); })
+                    .sort(function(a, b) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    });
+                
+                completedOrders = allDriverOrders.filter(function(o) {
+                    return o.status === 'delivered';
+                });
+                
+                console.log('📚 إجمالي طلباتي:', allDriverOrders.length);
+                console.log('✅ المكتملة:', completedOrders.length);
+                
+            } catch (e) {
+                console.error('خطأ:', e);
+            }
+        }
+        
+        // ==================== Load Orders ====================
+        async function loadOrders(showToast) {
+            try {
+                const snap = await Zain.db.collection('orders').get();
+                
+                const allFetchedOrders = snap.docs.map(function(d) {
+                    return Object.assign({ id: d.id }, d.data());
+                });
+                
+                personalOrders = allFetchedOrders.filter(function(o) {
+                    return o.preferredDriverId === currentDriver.id && 
+                           !o.driverId && 
+                           ['pending', 'confirmed', 'preparing', 'ready'].indexOf(o.status) !== -1;
+                });
+                
+                availableOrders = allFetchedOrders.filter(function(o) {
+                    return o.status === 'ready' && 
+                           !o.driverId && 
+                           !o.preferredDriverId;
+                });
+                
+                allOrders = allFetchedOrders.filter(function(o) {
+                    return o.driverId === currentDriver.id && 
+                           o.status === 'delivering';
+                });
+                
+                if (allOrders.length > 0 && !currentOrder) {
+                    showActiveOrder(allOrders[0]);
+                }
+                
+                renderPersonalOrders();
+                renderAvailableOrders();
+                updateNavBadges();
+                
+                if (showToast) {
+                    Zain.toast('✅ تم التحديث', 'success');
+                }
+                
+            } catch (e) {
+                console.error('❌ خطأ:', e);
+            }
+        }
+        
+        // ==================== Update Nav Badges ====================
+        function updateNavBadges() {
+            const availableCount = personalOrders.length + availableOrders.length;
+            
+            const navMapBadge = document.getElementById('navMapBadge');
+            if (navMapBadge) {
+                if (availableCount > 0) {
+                    navMapBadge.textContent = availableCount;
+                    navMapBadge.style.display = 'flex';
+                } else {
+                    navMapBadge.style.display = 'none';
+                }
+            }
+        }
+        
+        // ==================== Render Personal Orders ====================
+        function renderPersonalOrders() {
+            const section = document.getElementById('personalOrdersSection');
+            const list = document.getElementById('personalOrdersList');
+            const count = document.getElementById('personalCount');
+            
+            if (!section || !list) return;
+            
+            count.textContent = personalOrders.length;
+            
+            if (personalOrders.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            
+            list.innerHTML = personalOrders.map(function(order) {
+                return renderOrderCard(order, true);
+            }).join('');
+        }
+        
+        // ==================== Render Available Orders ====================
+        function renderAvailableOrders() {
+            const list = document.getElementById('availableOrdersList');
+            const count = document.getElementById('availableCount');
+            
+            if (!list) return;
+            
+            count.textContent = availableOrders.length;
+            
+            if (currentDriver.status !== 'online') {
+                list.innerHTML = 
+                    '<div class="empty-state">' +
+                        '<div class="emoji">⏸️</div>' +
+                        '<h3>يجب أن تكون متصلاً</h3>' +
+                        '<p>اضغط على "متصل" لرؤية الطلبات</p>' +
+                    '</div>';
+                return;
+            }
+            
+            if (availableOrders.length === 0) {
+                list.innerHTML = 
+                    '<div class="empty-state">' +
+                        '<div class="emoji">✅</div>' +
+                        '<h3>لا توجد طلبات متاحة</h3>' +
+                        '<p>سيتم إشعارك عند توفر طلب جديد</p>' +
+                    '</div>';
+                return;
+            }
+            
+            list.innerHTML = availableOrders.map(function(order) {
+                return renderOrderCard(order, false);
+            }).join('');
+        }
+        
+        // ==================== Render Order Card ====================
+        function renderOrderCard(order, isPersonal) {
+            let distance = null;
+            if (currentDriver.location && order.storeLocation) {
+                distance = Zain.Helpers.calculateDistance(
+                    currentDriver.location.lat, currentDriver.location.lng,
+                    order.storeLocation.lat, order.storeLocation.lng
+                );
+            }
+            
+            const mapsUrl = getMapsUrl(order);
+            
+            return '<div class="order-card ' + (isPersonal ? 'personal' : '') + '">' +
+                '<div class="order-header">' +
+                    '<div class="order-code">#' + (order.trackingCode || order.id.slice(-8)) + '</div>' +
+                    '<div class="order-price">' + (order.deliveryFee || 500).toLocaleString() + ' ر.ي</div>' +
+                '</div>' +
+                
+                '<div class="order-info">' +
+                    '<div class="info-row">' +
+                        '<i class="fas fa-store"></i>' +
+                        '<span><strong>' + (order.storeName || 'متجر') + '</strong></span>' +
+                    '</div>' +
+                    '<div class="info-row">' +
+                        '<i class="fas fa-user"></i>' +
+                        '<span>' + (order.customerName || 'عميل') + '</span>' +
+                    '</div>' +
+                    (order.customerPhone ? 
+                        '<div class="info-row">' +
+                            '<i class="fas fa-phone"></i>' +
+                            '<span dir="ltr">' + order.customerPhone + '</span>' +
+                        '</div>' 
+                    : '') +
+                '</div>' +
+                
+                (distance ? 
+                    '<div class="distance-badge ' + (isPersonal ? 'personal' : '') + '">' +
+                        '<i class="fas fa-route"></i> ' + distance.toFixed(1) + ' كم' +
+                    '</div>' 
+                : '') +
+                
+                '<div class="order-actions-row">' +
+                    '<button class="small-btn btn-details" onclick="viewOrderDetails(\'' + order.id + '\')">' +
+                        '<i class="fas fa-receipt"></i> التفاصيل' +
+                    '</button>' +
+                    (order.customerPhone ? 
+                        '<a href="tel:' + order.customerPhone + '" class="small-btn btn-call">' +
+                            '<i class="fas fa-phone"></i>' +
+                        '</a>' 
+                    : '') +
+                    '<a href="' + mapsUrl + '" target="_blank" class="small-btn btn-map">' +
+                        '<i class="fas fa-map-marker-alt"></i>' +
+                    '</a>' +
+                '</div>' +
+                
+                '<button class="accept-btn ' + (isPersonal ? 'personal' : '') + '" onclick="acceptOrder(\'' + order.id + '\')">' +
+                    '<i class="fas fa-check-circle"></i> ' + (isPersonal ? 'قبول (مخصص لك)' : 'قبول الطلب') +
+                '</button>' +
+            '</div>';
+        }
+        
+        // ==================== Get Maps URL ====================
+        function getMapsUrl(order) {
+            const addressDetail = (order.deliveryAddress && order.deliveryAddress.detail) || '';
+            if (addressDetail.indexOf('http') === 0) return addressDetail;
+            
+            const lat = (order.deliveryAddress && order.deliveryAddress.lat) || 15.3694;
+            const lng = (order.deliveryAddress && order.deliveryAddress.lng) || 44.1910;
+            return 'https://www.google.com/maps?q=' + lat + ',' + lng;
+        }
+        
+        // ==================== View Order Details ====================
+        function viewOrderDetails(orderId) {
+            const order = allOrders.concat(personalOrders).concat(availableOrders).find(function(o) {
+                return o.id === orderId;
+            });
+            
+            if (!order) {
+                Zain.toast('الطلب غير موجود', 'error');
+                return;
+            }
+            
+            const status = order.status || 'pending';
+            const statusNames = {
+                pending: '⏳ جديد', confirmed: '✅ مؤكد', preparing: '🍳 تحضير',
+                ready: '📦 جاهز', delivering: '🚴 توصيل', delivered: '🏁 مكتمل', cancelled: '❌ ملغي'
+            };
+            
+            const paymentNames = {
+                cash: '💵 كاش', credit: '💳 بطاقة', wallet: '💰 محفظة',
+                'كاش': '💵 كاش', 'بطاقة': '💳 بطاقة', 'محفظة': '💰 محفظة'
+            };
+            
+            const addressDetail = (order.deliveryAddress && order.deliveryAddress.detail) || '';
+            const mapsUrl = getMapsUrl(order);
+            
+            const itemsHtml = (order.items || []).map(function(item) {
+                const itemTotal = (item.price || 0) * (item.quantity || 1);
+                return '<div class="item-box">' +
+                    '<img src="' + (item.image || 'https://via.placeholder.com/50') + '" ' +
+                        'onerror="this.src=\'https://via.placeholder.com/50\'">' +
+                    '<div class="item-info-detail">' +
+                        '<strong>' + (item.name || 'منتج') + '</strong>' +
+                        '<small>' + (item.quantity || 1) + ' × ' + (item.price || 0).toLocaleString() + ' ر.ي</small>' +
+                    '</div>' +
+                    '<div class="item-total">' + itemTotal.toLocaleString() + ' ر.ي</div>' +
+                '</div>';
+            }).join('');
+            
+            document.getElementById('orderModalTitle').innerHTML = 
+                '<i class="fas fa-receipt"></i> طلب #' + (order.trackingCode || order.id.slice(-8));
+            
+            document.getElementById('orderModalBody').innerHTML = 
+                '<div class="detail-section">' +
+                    '<div class="detail-section-title"><i class="fas fa-info-circle"></i> معلومات الطلب</div>' +
+                    
+                    '<div class="detail-row">' +
+                        '<span class="detail-label"><i class="fas fa-hashtag"></i> رقم الطلب</span>' +
+                        '<span class="detail-value ltr">' + (order.trackingCode || order.id.slice(-8)) + '</span>' +
+                    '</div>' +
+                    
+                    '<div class="detail-row">' +
+                        '<span class="detail-label"><i class="fas fa-toggle-on"></i> الحالة</span>' +
+                        '<span class="detail-value">' + (statusNames[status] || status) + '</span>' +
+                    '</div>' +
+                    
+                    '<div class="detail-row">' +
+                        '<span class="detail-label"><i class="fas fa-store"></i> المتجر</span>' +
+                        '<span class="detail-value">' + (order.storeName || '-') + '</span>' +
+                    '</div>' +
+                    
+                    '<div class="detail-row">' +
+                        '<span class="detail-label"><i class="fas fa-calendar"></i> التاريخ</span>' +
+                        '<span class="detail-value">' + Zain.Helpers.getFullDateString(order.createdAt) + '</span>' +
+                    '</div>' +
+                    
+                    '<div class="detail-row">' +
+                        '<span class="detail-label"><i class="fas fa-credit-card"></i> طريقة الدفع</span>' +
+                        '<span class="detail-value">' + (paymentNames[order.paymentMethod] || order.paymentMethod || 'كاش') + '</span>' +
+                    '</div>' +
+                '</div>' +
+                
+                '<div class="detail-section">' +
+                    '<div class="detail-section-title"><i class="fas fa-user"></i> معلومات العميل</div>' +
+                    
+                    '<div class="detail-row">' +
+                        '<span class="detail-label"><i class="fas fa-user"></i> الاسم</span>' +
+                        '<span class="detail-value">' + (order.customerName || 'زائر') + '</span>' +
+                    '</div>' +
+                    
+                    '<div class="detail-row">' +
+                        '<span class="detail-label"><i class="fas fa-phone"></i> الهاتف</span>' +
+                        '<span class="detail-value ltr">' + (order.customerPhone || '-') + '</span>' +
+                    '</div>' +
+                    
+                    (addressDetail ? 
+                        '<div class="detail-row" style="flex-direction: column; align-items: stretch; gap: 10px;">' +
+                            '<span class="detail-label"><i class="fas fa-map-marker-alt"></i> العنوان</span>' +
+                            '<div class="address-box">' +
+                                '<div>' + addressDetail + '</div>' +
+                                '<a href="' + mapsUrl + '" target="_blank">' +
+                                    '<i class="fas fa-external-link-alt"></i> فتح في الخريطة' +
+                                '</a>' +
+                            '</div>' +
+                        '</div>' 
+                    : '') +
+                '</div>' +
+                
+                '<div class="detail-section">' +
+                    '<div class="detail-section-title"><i class="fas fa-shopping-bag"></i> المنتجات (' + (order.items || []).length + ')</div>' +
+                    (itemsHtml || '<p style="text-align:center;color:#999;padding:20px;">لا توجد منتجات</p>') +
+                '</div>' +
+                
+                '<div class="detail-section">' +
+                    '<div class="detail-section-title"><i class="fas fa-calculator"></i> تفاصيل الفاتورة</div>' +
+                    
+                    '<div class="totals-box">' +
+                        '<div class="total-row">' +
+                            '<span>المجموع:</span>' +
+                            '<span>' + (order.subtotal || 0).toLocaleString() + ' ر.ي</span>' +
+                        '</div>' +
+                        
+                        (order.discount && order.discount > 0 ? 
+                            '<div class="total-row discount">' +
+                                '<span>🎫 الخصم:</span>' +
+                                '<span>-' + order.discount.toLocaleString() + ' ر.ي</span>' +
+                            '</div>' 
+                        : '') +
+                        
+                        '<div class="total-row">' +
+                            '<span>🚴 رسوم التوصيل:</span>' +
+                            '<span>' + (order.deliveryFee || 0).toLocaleString() + ' ر.ي</span>' +
+                        '</div>' +
+                        
+                        '<div class="total-row final">' +
+                            '<span>الإجمالي:</span>' +
+                            '<span>' + (order.total || 0).toLocaleString() + ' ر.ي</span>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                
+                '<div class="modal-actions">' +
+                    (order.customerPhone ? 
+                        '<a href="tel:' + order.customerPhone + '" class="modal-action-btn modal-btn-call">' +
+                            '<i class="fas fa-phone"></i> اتصال' +
+                        '</a>' 
+                    : '') +
+                    
+                    (order.customerPhone ? 
+                        '<a href="https://wa.me/967' + order.customerPhone.replace(/[^0-9]/g, '') + '" ' +
+                            'target="_blank" class="modal-action-btn modal-btn-whatsapp">' +
+                            '<i class="fab fa-whatsapp"></i> واتساب' +
+                        '</a>' 
+                    : '') +
+                    
+                    '<a href="' + mapsUrl + '" target="_blank" class="modal-action-btn modal-btn-map">' +
+                        '<i class="fas fa-map-marked-alt"></i> الخريطة' +
+                    '</a>' +
+                '</div>';
+            
+            document.getElementById('orderDetailsModal').classList.add('active');
+        }
+        
+        function closeOrderModal() {
+            document.getElementById('orderDetailsModal').classList.remove('active');
+        }
+        
+        // ==================== Accept Order ====================
+        async function acceptOrder(orderId) {
+            if (currentDriver.status === 'busy') {
+                Zain.toast('أنت مشغول حالياً', 'error');
+                return;
+            }
+            
+            if (!confirm('قبول هذا الطلب؟')) return;
+            
+            try {
+                stopAlarmMP3();
+                
+                await Zain.Orders.assignDriver(orderId, currentDriver.id, currentDriver.name);
+                
+                await Zain.db.collection('drivers').doc(currentDriver.id).update({
+                    status: 'busy',
+                    currentOrder: orderId
+                });
+                
+                currentDriver.status = 'busy';
+                
+                Zain.toast('✅ تم قبول الطلب', 'success');
+                renderDriverCard();
+                
+                const orderDoc = await Zain.db.collection('orders').doc(orderId).get();
+                if (orderDoc.exists) {
+                    showActiveOrder(Object.assign({ id: orderId }, orderDoc.data()));
+                }
+                
+                loadOrders();
+                
+            } catch (error) {
+                console.error('خطأ:', error);
+                Zain.toast('حدث خطأ', 'error');
+            }
+        }
+        
+        // ==================== Show Active Order ====================
+        function showActiveOrder(order) {
+            currentOrder = order;
+            
+            const section = document.getElementById('activeOrderSection');
+            section.style.display = 'block';
+            
+            const step = order.deliveryStep || 'pickup';
+            
+            section.innerHTML = 
+                '<div class="active-order">' +
+                    '<div class="active-order-header">' +
+                        '<h3>🚴 طلب #' + (order.trackingCode || order.id.slice(-8)) + '</h3>' +
+                        '<div style="font-weight: 800; font-size: 16px;">' + (order.deliveryFee || 500).toLocaleString() + ' ر.ي</div>' +
+                    '</div>' +
+                    
+                    '<div class="active-order-info">' +
+                        '<div class="active-info-row">' +
+                            '<i class="fas fa-store"></i>' +
+                            '<span>' + (order.storeName || 'متجر') + '</span>' +
+                        '</div>' +
+                        '<div class="active-info-row">' +
+                            '<i class="fas fa-user"></i>' +
+                            '<span>' + (order.customerName || 'عميل') + '</span>' +
+                        '</div>' +
+                        '<div class="active-info-row">' +
+                            '<i class="fas fa-phone"></i>' +
+                            '<a href="tel:' + (order.customerPhone || '') + '">' + (order.customerPhone || 'غير متوفر') + '</a>' +
+                        '</div>' +
+                    '</div>' +
+                    
+                    '<div class="map-container" id="orderMap"></div>' +
+                    
+                    '<div class="timer-card">' +
+                        '<div class="timer-label"><i class="fas fa-clock"></i> الوقت المتبقي</div>' +
+                        '<div class="timer-value" id="remainingTime">--:--</div>' +
+                    '</div>' +
+                    
+                    '<div class="delivery-steps">' +
+                        '<div class="step ' + (step === 'pickup' ? 'active' : 'completed') + '">' +
+                            '<div class="step-icon"><i class="fas fa-store"></i></div>' +
+                            '<div class="step-label">استلام</div>' +
+                        '</div>' +
+                        '<div class="step ' + (step === 'enroute' ? 'active' : '') + '">' +
+                            '<div class="step-icon"><i class="fas fa-road"></i></div>' +
+                            '<div class="step-label">في الطريق</div>' +
+                        '</div>' +
+                        '<div class="step">' +
+                            '<div class="step-icon"><i class="fas fa-home"></i></div>' +
+                            '<div class="step-label">توصيل</div>' +
+                        '</div>' +
+                    '</div>' +
+                    
+                    '<div class="action-buttons-row">' +
+                        (step === 'pickup' ? 
+                            '<button class="action-btn-large btn-pickup" onclick="markAsPickedUp()">' +
+                                '<i class="fas fa-box"></i> تم الاستلام' +
+                            '</button>' 
+                        : 
+                            '<button class="action-btn-large btn-deliver" onclick="markAsDelivered()">' +
+                                '<i class="fas fa-check-circle"></i> تم التوصيل' +
+                            '</button>'
+                        ) +
+                    '</div>' +
+                    
+                    '<button class="reject-btn" onclick="rejectOrder()">' +
+                        '<i class="fas fa-times"></i> إلغاء الطلب' +
+                    '</button>' +
+                '</div>';
+            
+            initMap(order);
+            startTimer(order);
+        }
+        
+        function initMap(order) {
+            setTimeout(function() {
+                const mapEl = document.getElementById('orderMap');
+                if (!mapEl || typeof L === 'undefined') return;
+                
+                if (map) map.remove();
+                
+                const storeLat = (order.storeLocation && order.storeLocation.lat) || Zain.MARIB_CENTER.lat;
+                const storeLng = (order.storeLocation && order.storeLocation.lng) || Zain.MARIB_CENTER.lng;
+                const customerLat = (order.deliveryAddress && order.deliveryAddress.lat) || storeLat;
+                const customerLng = (order.deliveryAddress && order.deliveryAddress.lng) || storeLng;
+                const driverLat = (currentDriver.location && currentDriver.location.lat) || storeLat;
+                const driverLng = (currentDriver.location && currentDriver.location.lng) || storeLng;
+                
+                map = L.map('orderMap', {
+                    zoomControl: true,
+                    attributionControl: true
+                }).setView([driverLat, driverLng], 15);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap',
+                    maxZoom: 19
+                }).addTo(map);
+                
+                // ✅ إضافة أماكن مأرب من Zain Core
+                if (Zain.addMaribPlacesToMap) {
+                    Zain.addMaribPlacesToMap(map);
+                }
+                
+                L.marker([storeLat, storeLng], {
+                    icon: L.divIcon({ 
+                        html: '<div style="font-size:32px;text-align:center;">🏪</div>', 
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 40]
+                    })
+                }).addTo(map).bindPopup('<b>🏪 المتجر</b>');
+                
+                L.marker([customerLat, customerLng], {
+                    icon: L.divIcon({ 
+                        html: '<div style="font-size:32px;text-align:center;">🏠</div>', 
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 40]
+                    })
+                }).addTo(map).bindPopup('<b>🏠 العميل</b>');
+                
+                driverMarker = L.marker([driverLat, driverLng], {
+                    icon: L.divIcon({ 
+                        html: '<div style="font-size:32px;text-align:center;">🛵</div>', 
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 40]
+                    })
+                }).addTo(map).bindPopup('<b>🛵 موقعك</b>');
+                
+                L.polyline(
+                    [[driverLat, driverLng], [storeLat, storeLng], [customerLat, customerLng]],
+                    { 
+                        color: '#e67e22', 
+                        weight: 5, 
+                        opacity: 0.85, 
+                        dashArray: '12, 8'
+                    }
+                ).addTo(map);
+                
+                const bounds = L.latLngBounds([
+                    [driverLat, driverLng],
+                    [storeLat, storeLng],
+                    [customerLat, customerLng]
+                ]);
+                
+                map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
+                
+            }, 100);
+        }
+        
+        function startTimer(order) {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(function() {
+                if (currentDriver.location && order.deliveryAddress && order.deliveryAddress.lat) {
+                    const dist = Zain.Helpers.calculateDistance(
+                        currentDriver.location.lat, currentDriver.location.lng,
+                        order.deliveryAddress.lat, order.deliveryAddress.lng
+                    );
+                    const minutes = Math.ceil(dist * 2);
+                    const timeEl = document.getElementById('remainingTime');
+                    
+                    if (timeEl) {
+                        const mins = Math.max(0, minutes);
+                        timeEl.textContent = String(mins).padStart(2, '0') + ':00';
+                    }
+                    
+                    if (driverMarker) {
+                        driverMarker.setLatLng([currentDriver.location.lat, currentDriver.location.lng]);
+                    }
+                }
+            }, 5000);
+        }
+        
+        async function markAsPickedUp() {
+            if (!currentOrder) return;
+            
+            try {
+                await Zain.db.collection('orders').doc(currentOrder.id).update({
+                    deliveryStep: 'enroute',
+                    pickedUpAt: new Date().toISOString()
+                });
+                
+                currentOrder.deliveryStep = 'enroute';
+                Zain.toast('✅ تم استلام الطلب', 'success');
+                showActiveOrder(currentOrder);
+                
+            } catch (e) {
+                Zain.toast('حدث خطأ', 'error');
+            }
+        }
+        
+        async function markAsDelivered() {
+            if (!currentOrder) return;
+            if (!confirm('تم التوصيل بنجاح؟')) return;
+            
+            try {
+                await Zain.Orders.markDelivered(currentOrder.id);
+                
+                await Zain.db.collection('drivers').doc(currentDriver.id).update({
+                    status: 'online',
+                    currentOrder: null,
+                    totalDeliveries: firebase.firestore.FieldValue.increment(1)
+                });
+                
+                currentDriver.status = 'online';
+                Zain.toast('✅ تم التوصيل بنجاح!', 'success');
+                
+                clearActiveOrder();
+                loadStats();
+                loadAllDriverOrders();
+                loadOrders();
+                renderDriverCard();
+                renderProfile();
+                
+            } catch (e) {
+                console.error('خطأ:', e);
+                Zain.toast('حدث خطأ', 'error');
+            }
+        }
+        
+        async function rejectOrder() {
+            if (!currentOrder) return;
+            if (!confirm('هل تريد إلغاء هذا الطلب؟')) return;
+            
+            try {
+                await Zain.db.collection('orders').doc(currentOrder.id).update({
+                    status: 'ready',
+                    driverId: null,
+                    driverName: null,
+                    driverRejectedAt: new Date().toISOString()
+                });
+                
+                await Zain.db.collection('drivers').doc(currentDriver.id).update({
+                    status: 'online',
+                    currentOrder: null
+                });
+                
+                currentDriver.status = 'online';
+                Zain.toast('تم إلغاء الطلب', 'info');
+                
+                clearActiveOrder();
+                loadOrders();
+                renderDriverCard();
+                
+            } catch (e) {
+                Zain.toast('حدث خطأ', 'error');
+            }
+        }
+        
+        function clearActiveOrder() {
+            if (timerInterval) clearInterval(timerInterval);
+            currentOrder = null;
+            document.getElementById('activeOrderSection').style.display = 'none';
+            
+            if (map) {
+                map.remove();
+                map = null;
+            }
+        }
+        
+        // ==================== Location Tracking ====================
+        function startLocationTracking() {
+            if (!navigator.geolocation) return;
+            
+            watchId = navigator.geolocation.watchPosition(
+                async function(position) {
+                    const location = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    try {
+                        await Zain.db.collection('driver_locations').doc(currentDriver.id).set(location, { merge: true });
+                        currentDriver.location = location;
+                        
+                        if (currentOrder && driverMarker) {
+                            driverMarker.setLatLng([location.lat, location.lng]);
+                        }
+                    } catch (e) {}
+                },
+                function(error) {
+                    console.error('خطأ في تحديد الموقع:', error);
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+            );
+        }
+        
+        // ==================== Listen to Orders ====================
+        function listenToOrders() {
+            if (unsubscribeOrders) unsubscribeOrders();
+            
+            unsubscribeOrders = Zain.db.collection('orders')
+                .onSnapshot(function(snapshot) {
+                    snapshot.docChanges().forEach(function(change) {
+                        const order = change.doc.data();
+                        const age = Date.now() - new Date(order.createdAt).getTime();
+                        
+                        if (change.type === 'added' && 
+                            order.preferredDriverId === currentDriver.id && 
+                            !order.driverId &&
+                            ['pending', 'confirmed', 'preparing', 'ready'].indexOf(order.status) !== -1) {
+                            
+                            if (age < 120000) {
+                                console.log('⭐ طلب جديد مخصص:', order.trackingCode);
+                                
+                                playSound('personal');
+                                
+                                showNotificationBanner(
+                                    '⭐ طلب جديد موجه إليك!',
+                                    (order.customerName || 'عميل') + ' اختارك للتوصيل',
+                                    '#E74C3C'
+                                );
+                                
+                                Zain.toast('⭐ طلب مخصص لك من ' + order.storeName, 'success', 10000);
+                                
+                                showDriverOrderBanner(order, 'personal');
+                            }
+                        }
+                        
+                        if (change.type === 'modified' && 
+                            order.status === 'ready' && 
+                            !order.driverId && 
+                            !order.preferredDriverId &&
+                            currentDriver.status === 'online') {
+                            
+                            const readyAge = Date.now() - new Date(order.readyAt || order.updatedAt || 0).getTime();
+                            
+                            if (readyAge < 60000) {
+                                console.log('📦 طلب جاهز جديد:', order.trackingCode);
+                                
+                                playSound('bell');
+                                
+                                Zain.toast('📦 طلب جديد من ' + order.storeName, 'info', 8000);
+                                
+                                showDriverOrderBanner(order, 'available');
+                            }
+                        }
+                    });
+                    
+                    loadOrders();
+                });
+        }
+        
+        // ==================== Driver Order Banner ====================
+        function showDriverOrderBanner(order, type) {
+            const oldBanner = document.getElementById('driverOrderBanner');
+            if (oldBanner) oldBanner.remove();
+            
+            const isPersonal = type === 'personal';
+            const bgColor = isPersonal ? 
+                'linear-gradient(135deg, #E74C3C, #C0392B)' : 
+                'linear-gradient(135deg, #e67e22, #f39c12)';
+            const icon = isPersonal ? '⭐' : '📦';
+            const title = isPersonal ? 'طلب موجه إليك!' : 'طلب جديد متاح!';
+            
+            const banner = document.createElement('div');
+            banner.id = 'driverOrderBanner';
+            banner.style.cssText = 
+                'position:fixed;' +
+                'top:20px;' +
+                'right:20px;' +
+                'left:20px;' +
+                'max-width:500px;' +
+                'margin:0 auto;' +
+                'background:' + bgColor + ';' +
+                'color:white;' +
+                'padding:20px;' +
+                'border-radius:20px;' +
+                'box-shadow:0 20px 60px rgba(0, 0, 0, 0.5);' +
+                'z-index:99999;' +
+                'display:flex;' +
+                'align-items:center;' +
+                'gap:15px;' +
+                'cursor:pointer;' +
+                'animation:driverBannerSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);' +
+                'font-family:Cairo, sans-serif;';
+            
+            banner.innerHTML = 
+                '<div style="width:60px;height:60px;background:rgba(255,255,255,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;animation:driverPulse 1.5s infinite;">' + icon + '</div>' +
+                '<div style="flex:1;min-width:0;">' +
+                    '<div style="font-weight:800;font-size:16px;margin-bottom:5px;">' + title + '</div>' +
+                    '<div style="font-size:13px;opacity:0.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' +
+                        (order.storeName || 'متجر') + ' • ' + (order.customerName || 'عميل') +
+                    '</div>' +
+                    '<div style="font-size:12px;opacity:0.9;margin-top:5px;">' +
+                        '💰 ' + (order.deliveryFee || 500).toLocaleString() + ' ر.ي' +
+                    '</div>' +
+                '</div>' +
+                '<div style="font-size:24px;opacity:0.8;">👆</div>';
+            
+            if (!document.getElementById('driverBannerAnimations')) {
+                const style = document.createElement('style');
+                style.id = 'driverBannerAnimations';
+                style.textContent = 
+                    '@keyframes driverBannerSlide {' +
+                    '    from { transform: translateY(-150%); opacity: 0; }' +
+                    '    to { transform: translateY(0); opacity: 1; }' +
+                    '}' +
+                    '@keyframes driverPulse {' +
+                    '    0%, 100% { transform: scale(1); }' +
+                    '    50% { transform: scale(1.1); }' +
+                    '}';
+                document.head.appendChild(style);
+            }
+            
+            banner.onclick = function() {
+                banner.style.opacity = '0';
+                banner.style.transform = 'translateY(-150%)';
+                banner.style.transition = 'all 0.3s';
+                
+                setTimeout(function() {
+                    banner.remove();
+                }, 300);
+                
+                stopAlarmMP3();
+                switchPage('home');
+            };
+            
+            document.body.appendChild(banner);
+            
+            setTimeout(function() {
+                if (document.getElementById('driverOrderBanner')) {
+                    banner.style.opacity = '0';
+                    banner.style.transform = 'translateY(-150%)';
+                    banner.style.transition = 'all 0.3s';
+                    
+                    setTimeout(function() {
+                        banner.remove();
+                    }, 300);
+                }
+            }, 30000);
+        }
+        
+        // ==================== Notification Banner ====================
+        function showNotificationBanner(title, body, color) {
+            const banner = document.getElementById('notificationBanner');
+            banner.style.background = 'linear-gradient(135deg, ' + color + ', ' + color + ')';
+            document.getElementById('notifTitle').textContent = title;
+            document.getElementById('notifBody').textContent = body;
+            banner.classList.add('show');
+            
+            setTimeout(function() {
+                banner.classList.remove('show');
+            }, 10000);
+        }
+        
+        // ==================== Load Earnings ====================
+        function loadEarnings() {
+            let filtered = completedOrders;
+            
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+            
+            if (currentPeriod === 'today') {
+                filtered = completedOrders.filter(function(o) {
+                    return new Date(o.deliveredAt || o.createdAt) >= today;
+                });
+            } else if (currentPeriod === 'week') {
+                filtered = completedOrders.filter(function(o) {
+                    return new Date(o.deliveredAt || o.createdAt) >= weekAgo;
+                });
+            } else if (currentPeriod === 'month') {
+                filtered = completedOrders.filter(function(o) {
+                    return new Date(o.deliveredAt || o.createdAt) >= monthAgo;
+                });
+            }
+            
+            const totalEarnings = filtered.reduce(function(sum, o) {
+                return sum + (o.deliveryFee || 500);
+            }, 0);
+            
+            const avgDelivery = filtered.length > 0 ? Math.round(totalEarnings / filtered.length) : 0;
+            
+            document.getElementById('periodEarnings').textContent = totalEarnings.toLocaleString();
+            document.getElementById('periodDeliveries').textContent = filtered.length;
+            document.getElementById('avgDelivery').textContent = avgDelivery.toLocaleString();
+            document.getElementById('periodDistance').textContent = (filtered.length * 3.5).toFixed(1) + ' كم';
+            
+            const totalAll = completedOrders.reduce(function(sum, o) {
+                return sum + (o.deliveryFee || 500);
+            }, 0);
+            document.getElementById('totalEarnings').textContent = totalAll.toLocaleString();
+            
+            const list = document.getElementById('earningsList');
+            
+            if (filtered.length === 0) {
+                list.innerHTML = 
+                    '<div class="empty-state">' +
+                        '<div class="emoji">💰</div>' +
+                        '<h3>لا توجد أرباح</h3>' +
+                        '<p>لم يتم تسجيل أي توصيلات في هذه الفترة</p>' +
+                    '</div>';
+                return;
+            }
+            
+            list.innerHTML = filtered.slice(0, 30).map(function(o) {
+                return '<div class="earning-item">' +
+                    '<div class="earning-icon"><i class="fas fa-truck"></i></div>' +
+                    '<div class="earning-info">' +
+                        '<div class="earning-title">#' + (o.trackingCode || o.id.slice(-8)) + '</div>' +
+                        '<div class="earning-date">' + Zain.Helpers.getRelativeTime(o.deliveredAt || o.createdAt) + '</div>' +
+                    '</div>' +
+                    '<div class="earning-amount">+' + (o.deliveryFee || 500).toLocaleString() + '</div>' +
+                '</div>';
+            }).join('');
+        }
+        
+        function changePeriod(period, btn) {
+            currentPeriod = period;
+            
+            document.querySelectorAll('.period-tab').forEach(function(t) {
+                t.classList.remove('active');
+            });
+            
+            if (btn) btn.classList.add('active');
+            loadEarnings();
+        }
+        
+        // ==================== Load History ====================
+        function loadHistory() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            const todayDeliveries = completedOrders.filter(function(o) {
+                return o.deliveredAt && o.deliveredAt.startsWith(today);
+            });
+            
+            document.getElementById('totalDeliveries').textContent = completedOrders.length;
+            document.getElementById('completedToday').textContent = todayDeliveries.length;
+            
+            const rate = allDriverOrders.length > 0 ? 
+                Math.round((completedOrders.length / allDriverOrders.length) * 100) : 100;
+            document.getElementById('completionRate').textContent = rate + '%';
+            
+            const list = document.getElementById('historyList');
+            
+            if (completedOrders.length === 0) {
+                list.innerHTML = 
+                    '<div class="empty-state">' +
+                        '<div class="emoji">📚</div>' +
+                        '<h3>لا يوجد سجل</h3>' +
+                        '<p>لم تقم بأي توصيلات بعد</p>' +
+                    '</div>';
+                return;
+            }
+            
+            list.innerHTML = completedOrders.slice(0, 50).map(function(o) {
+                return '<div class="earning-item">' +
+                    '<div class="earning-icon" style="background: linear-gradient(135deg, #27AE60, #2ECC71);">' +
+                        '<i class="fas fa-check"></i>' +
+                    '</div>' +
+                    '<div class="earning-info">' +
+                        '<div class="earning-title">#' + (o.trackingCode || o.id.slice(-8)) + '</div>' +
+                        '<div class="earning-date">' + 
+                            (o.storeName || 'متجر') + ' • ' + 
+                            Zain.Helpers.getFullDateString(o.deliveredAt || o.createdAt) +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="earning-amount">+' + (o.deliveryFee || 500).toLocaleString() + '</div>' +
+                '</div>';
+            }).join('');
+        }
+        
+        // ==================== Full Map ====================
+        function initFullMap() {
+            const mapEl = document.getElementById('fullMap');
+            if (!mapEl || typeof L === 'undefined') return;
+            
+            if (fullMap) fullMap.remove();
+            
+            const driverLat = (currentDriver.location && currentDriver.location.lat) || Zain.MARIB_CENTER.lat;
+            const driverLng = (currentDriver.location && currentDriver.location.lng) || Zain.MARIB_CENTER.lng;
+            
+            fullMap = L.map('fullMap', {
+                zoomControl: true,
+                attributionControl: true
+            }).setView([driverLat, driverLng], Zain.MARIB_CENTER.zoom);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 19
+            }).addTo(fullMap);
+            
+            // ✅ إضافة أماكن مأرب من Zain Core
+            if (Zain.addMaribPlacesToMap) {
+                Zain.addMaribPlacesToMap(fullMap);
+            }
+            
+            L.marker([driverLat, driverLng], {
+                icon: L.divIcon({ 
+                    html: '<div style="font-size:38px;text-align:center;">🛵</div>', 
+                    iconSize: [46, 46],
+                    iconAnchor: [23, 46]
+                }),
+                zIndexOffset: 2000
+            }).addTo(fullMap).bindPopup('<b>🛵 موقعك</b>').openPopup();
+            
+            availableOrders.forEach(function(order) {
+                if (order.storeLocation && order.storeLocation.lat) {
+                    const marker = L.marker(
+                        [order.storeLocation.lat, order.storeLocation.lng],
+                        { 
+                            icon: L.divIcon({ 
+                                html: '<div style="font-size:32px;text-align:center;">📦</div>', 
+                                iconSize: [40, 40],
+                                iconAnchor: [20, 40]
+                            }) 
+                        }
+                    ).addTo(fullMap);
+                    
+                    marker.bindPopup(
+                        '<div style="text-align: right; direction: rtl; font-family: Cairo; min-width: 150px;">' +
+                            '<strong style="color: #e67e22;">📦 #' + (order.trackingCode || order.id.slice(-8)) + '</strong><br>' +
+                            '<span style="font-size: 12px;">' + (order.storeName || 'متجر') + '</span><br>' +
+                            '<span style="color: #27AE60; font-weight: 800; font-size: 13px;">' + 
+                                (order.deliveryFee || 500).toLocaleString() + ' ر.ي</span>' +
+                        '</div>'
+                    );
+                }
+            });
+            
+            personalOrders.forEach(function(order) {
+                if (order.storeLocation && order.storeLocation.lat) {
+                    const marker = L.marker(
+                        [order.storeLocation.lat, order.storeLocation.lng],
+                        { 
+                            icon: L.divIcon({ 
+                                html: '<div style="font-size:32px;text-align:center;">⭐</div>', 
+                                iconSize: [40, 40],
+                                iconAnchor: [20, 40]
+                            }),
+                            zIndexOffset: 1000
+                        }
+                    ).addTo(fullMap);
+                    
+                    marker.bindPopup(
+                        '<div style="text-align: right; direction: rtl; font-family: Cairo; min-width: 150px;">' +
+                            '<strong style="color: #E74C3C;">⭐ موجه إليك</strong><br>' +
+                            '<span style="font-size: 12px;">#' + (order.trackingCode || order.id.slice(-8)) + '</span><br>' +
+                            '<span style="font-size: 12px;">' + (order.storeName || 'متجر') + '</span>' +
+                        '</div>'
+                    );
+                }
+            });
+            
+            setTimeout(function() {
+                if (fullMap) {
+                    fullMap.invalidateSize();
+                }
+            }, 200);
+        }
+        
+        // ==================== Profile Edit ====================
+        function editProfile() {
+            document.getElementById('editName').value = currentDriver.name || '';
+            document.getElementById('editPhone').value = currentDriver.phone || '';
+            document.getElementById('profileModal').classList.add('active');
+        }
+        
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+        }
+        
+        async function saveProfile() {
+            const name = document.getElementById('editName').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+            
+            if (!name) {
+                Zain.toast('الرجاء إدخال الاسم', 'error');
+                return;
+            }
+            
+            try {
+                await Zain.db.collection('drivers').doc(currentDriver.id).update({
+                    name: name,
+                    phone: phone,
+                    updatedAt: new Date().toISOString()
+                });
+                
+                currentDriver.name = name;
+                currentDriver.phone = phone;
+                
+                Zain.toast('✅ تم حفظ التعديلات', 'success');
+                closeProfileModal();
+                renderDriverCard();
+                renderProfile();
+                
+            } catch (e) {
+                Zain.toast('حدث خطأ', 'error');
+            }
+        }
+        
+        // ==================== Other Functions ====================
+        function showAbout() {
+            alert('🚴 أبشر بي\n\nلوحة المندوب\nالإصدار: 10.6.0\n\n✅ FCM مفعّل للإشعارات في الخلفية\n\n© 2026 أبشر بي');
+        }
+        
+        function contactSupport() {
+            window.open('https://wa.me/967777311579?text=' + encodeURIComponent('مرحباً، أحتاج مساعدة كسائق في أبشر بي'), '_blank');
+        }
+        
+        async function updateNotifications() {
+            try {
+                const count = await Zain.Notifications.getUnreadCount();
+                const badge = document.getElementById('notifBadge');
+                
+                if (badge) {
+                    if (count > 0) {
+                        badge.textContent = count > 99 ? '99+' : count;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            } catch (e) {}
+        }
+        
+        function showNotifications() {
+            window.location.href = 'notifications.html';
+        }
+        
+        async function confirmLogout() {
+            if (!confirm('هل تريد تسجيل الخروج؟')) return;
+            
+            // حذف FCM Token
+            if (window.AbsharSound && window.AbsharSound.deleteFCMToken) {
+                try {
+                    await window.AbsharSound.deleteFCMToken();
+                    console.log('🗑️ تم حذف FCM Token');
+                } catch (e) {}
+            }
+            
+            Zain.logout();
+        }
+        
+        // ==================== Modal Outside Click ====================
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+        
+        // ==================== Start ====================
+        document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(init, 500);
+    setInterval(updateNotifications, 30000);
+    
+    // ✅ نظام التحديث التلقائي
+    initAutoUpdate();
+    
+    // ✅ إعداد Capacitor Push (APK)
+    initCapacitorPush();
+});
+
+// ================================================================
+// 🔔 Capacitor Push Notifications (للـ APK)
+// ================================================================
+async function initCapacitorPush() {
+    try {
+        // اكتشف إذا كنا في APK
+        const isCapacitor = typeof window.Capacitor !== 'undefined' && 
+                           window.Capacitor.isNativePlatform && 
+                           window.Capacitor.isNativePlatform();
+        
+        console.log('📱 البيئة:', isCapacitor ? 'APK (Native)' : 'المتصفح');
+        
+        if (!isCapacitor) {
+            console.log('🌐 نستخدم Firebase Web FCM');
+            return;
+        }
+        
+        console.log('🚀 تهيئة Capacitor Push...');
+        
+        // استيراد Push Plugin
+        const { PushNotifications } = window.Capacitor.Plugins;
+        
+        if (!PushNotifications) {
+            console.error('❌ PushNotifications plugin غير مثبّت');
+            return;
+        }
+        
+        // ✅ 1. طلب الإذن
+        let permStatus = await PushNotifications.checkPermissions();
+        console.log('📋 حالة الإذن:', permStatus);
+        
+        if (permStatus.receive === 'prompt') {
+            permStatus = await PushNotifications.requestPermissions();
+        }
+        
+        if (permStatus.receive !== 'granted') {
+            console.warn('⚠️ المستخدم لم يمنح إذن الإشعارات');
+            return;
+        }
+        
+        console.log('✅ الإذن ممنوح');
+        
+        // ✅ 2. تسجيل الإشعارات
+        await PushNotifications.register();
+        console.log('📝 تم تسجيل Push Notifications');
+        
+        // ✅ 3. استقبال Token
+        PushNotifications.addListener('registration', function(token) {
+            console.log('🔑 FCM Token (Native):', token.value);
+            
+            // حفظ Token في Firestore
+            if (currentDriver && currentDriver.id) {
+                saveNativeFCMToken(token.value);
+            }
+            
+            // حفظ محلياً
+            localStorage.setItem('abshar_fcm_token_native', token.value);
+            localStorage.setItem('abshar_fcm_token', token.value);
+        });
+        
+        // ✅ 4. فشل التسجيل
+        PushNotifications.addListener('registrationError', function(error) {
+            console.error('❌ فشل التسجيل:', error);
+        });
+        
+        // ✅ 5. استقبال إشعار (التطبيق مفتوح)
+        PushNotifications.addListener('pushNotificationReceived', function(notification) {
+            console.log('📬 إشعار (مقدمة):', notification);
+            
+            const data = notification.data || {};
+            const type = data.type || 'personal';
+            
+            // تشغيل الصوت
+            playSound(type);
+            
+            // إظهار إشعار داخل التطبيق
+            if (notification.title) {
+                Zain.toast('🔔 ' + notification.title, 'info', 8000);
+            }
+            
+            // تحديث الطلبات
+            loadOrders();
+        });
+        
+        // ✅ 6. النقر على إشعار (من شريط الإشعارات)
+        PushNotifications.addListener('pushNotificationActionPerformed', function(action) {
+            console.log('👆 تم النقر على الإشعار:', action);
+            
+            const data = action.notification.data || {};
+            const orderId = data.orderId;
+            
+            // فتح الطلب
+            if (orderId) {
+                viewOrderDetails(orderId);
+            } else {
+                switchPage('home');
+            }
+        });
+        
+        console.log('🎉 Capacitor Push جاهز!');
+        
+    } catch (error) {
+        console.error('❌ خطأ في Capacitor Push:', error);
+    }
+}
+
+// ================================================================
+// 💾 حفظ Native FCM Token في Firestore
+// ================================================================
+async function saveNativeFCMToken(token) {
+    try {
+        if (!currentDriver || !currentDriver.id) return;
+        
+        await Zain.db.collection('fcm_tokens').doc(currentDriver.id).set({
+            token: token,
+            userId: currentDriver.id,
+            platform: 'android',
+            type: 'native',
+            userAgent: navigator.userAgent,
+            updatedAt: new Date().toISOString()
+        }, { merge: true });
+        
+        console.log('✅ تم حفظ Native FCM Token');
+        
+    } catch (error) {
+        console.error('❌ خطأ في حفظ Token:', error);
+    }
+}
+
+// ✅ تصدير
+window.initCapacitorPush = initCapacitorPush;
+// ================================================================
+// 🔄 نظام التحديث التلقائي
+// ================================================================
+function initAutoUpdate() {
+    // ✅ 1. الاستماع لتحديثات Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', function(event) {
+            const data = event.data || {};
+            
+            // ✅ عند تحديث SW
+            if (data.type === 'SW_UPDATED') {
+                console.log('🔄 تم تحديث التطبيق إلى v' + data.version);
+                
+                Zain.toast('🔄 تم تحديث التطبيق', 'success');
+                
+                // إعادة تحميل بعد 2 ثانية
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000);
+            }
+            
+            // ✅ عند مسح الكاش
+            if (data.type === 'CACHE_CLEARED') {
+                console.log('✅ تم مسح الكاش');
+                window.location.reload();
+            }
+            
+            // ✅ استقبال الإصدار
+            if (data.type === 'VERSION') {
+                console.log('📦 إصدار SW:', data.version);
+            }
+        });
+        
+        // ✅ 2. فحص تحديثات SW كل 5 دقائق
+        setInterval(function() {
+            navigator.serviceWorker.getRegistration().then(function(reg) {
+                if (reg) {
+                    reg.update();
+                }
+            });
+        }, 5 * 60 * 1000);
+        
+        // ✅ 3. الفحص عند العودة للتطبيق
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                navigator.serviceWorker.getRegistration().then(function(reg) {
+                    if (reg) reg.update();
+                });
+            }
+        });
+    }
+    
+    // ✅ 4. فحص إصدار التطبيق كل دقيقة
+    setInterval(checkAppVersion, 60 * 1000);
+    
+    // ✅ 5. فحص عند فتح التطبيق
+    setTimeout(checkAppVersion, 5000);
+}
+
+// ================================================================
+// 🔍 فحص إصدار التطبيق
+// ================================================================
+let currentAppVersion = null;
+
+async function checkAppVersion() {
+    try {
+        const response = await fetch('version.json?t=' + Date.now(), {
+            cache: 'no-store'
+        });
+        
+        if (!response.ok) return;
+        
+        const data = await response.json();
+        const serverVersion = data.version;
+        
+        if (!serverVersion) return;
+        
+        // ✅ حفظ أول إصدار
+        if (!currentAppVersion) {
+            currentAppVersion = serverVersion;
+            console.log('📦 إصدار التطبيق:', serverVersion);
+            return;
+        }
+        
+        // ✅ مقارنة
+        if (serverVersion !== currentAppVersion) {
+            console.log('🔄 إصدار جديد:', serverVersion);
+            console.log('📦 الحالي:', currentAppVersion);
+            
+            Zain.toast('🔄 تحديث متوفر — إعادة تحميل...', 'info', 5000);
+            
+            // إعادة تحميل
+            setTimeout(function() {
+                // مسح الكاش أولاً
+                if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
+                        type: 'CLEAR_CACHE'
+                    });
+                }
+                
+                // ثم إعادة تحميل
+                setTimeout(function() {
+                    window.location.reload(true);
+                }, 1000);
+            }, 2000);
+        }
+        
+    } catch (e) {
+        // silent fail
+    }
+}
+
+// ✅ تصدير الدالة
+window.checkAppVersion = checkAppVersion;
+        // ==================== Export ====================
+        window.switchPage = switchPage;
+        window.toggleWork = toggleWork;
+        window.setStatus = setStatus;
+        window.acceptOrder = acceptOrder;
+        window.markAsPickedUp = markAsPickedUp;
+        window.markAsDelivered = markAsDelivered;
+        window.rejectOrder = rejectOrder;
+        window.loadOrders = loadOrders;
+        window.viewOrderDetails = viewOrderDetails;
+        window.closeOrderModal = closeOrderModal;
+        window.changePeriod = changePeriod;
+        window.loadHistory = loadHistory;
+        window.editProfile = editProfile;
+        window.closeProfileModal = closeProfileModal;
+        window.saveProfile = saveProfile;
+        window.showAbout = showAbout;
+        window.contactSupport = contactSupport;
+        window.testSound = testSound;
+        window.showNotifications = showNotifications;
+        window.confirmLogout = confirmLogout;
+        window.unlockAudio = unlockAudio;
+        window.stopAlarmMP3 = stopAlarmMP3;
+        window.registerServiceWorker = registerServiceWorker;
+        window.initFCMForDriver = initFCMForDriver;
+        window.checkFCMStatus = checkFCMStatus;
+        
+        // ==================== دوال اختبار إضافية ====================
+        window.testPersonalSound = function() {
+            if (window.AbsharSound) {
+                window.AbsharSound.play('bell');
+                Zain.toast('🔔 اختبار صوت الجرس', 'success');
+            }
+        };
+        
+        window.stopAllSound = function() {
+            if (window.AbsharSound) {
+                window.AbsharSound.stop();
+                Zain.toast('⏹️ تم إيقاف الصوت', 'info');
+            }
+        };
+        
+        console.log('%c✅ drivers.html v10.6.0 جاهز (أبشر بي + FCM)', 
+            'color: #27AE60; font-weight: bold;');
+        console.log('%c🔔 الصوت: bell.mp3 محلي', 
+            'color: #D4AF37; font-weight: bold;');
+        console.log('%c📬 FCM: للإشعارات في الخلفية', 
+            'color: #3498DB; font-weight: bold;');
+        console.log('%c🧪 اختبار: testSound() | checkFCMStatus()', 
+            'color: #9B59B6; font-weight: bold;');
+    </script>
+</body>
+</html>
