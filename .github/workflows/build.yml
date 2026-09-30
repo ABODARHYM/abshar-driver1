@@ -4,38 +4,47 @@ on:
   push:
     branches: [ main, master ]
   workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual trigger'
+        required: false
+        default: 'Manual build'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout
+      - name: 📥 Checkout Code
         uses: actions/checkout@v4
 
-      - name: Show files
+      - name: 📋 Show files
         run: |
           echo "=== Root files ==="
           ls -la
           echo ""
           echo "=== google-services.json check ==="
           if [ -f "google-services.json" ]; then
-            echo "✅ google-services.json exists!"
+            echo "✅ google-services.json EXISTS"
+            echo "=== Content (first 10 lines) ==="
+            head -10 google-services.json
           else
-            echo "❌ google-services.json MISSING!"
+            echo "❌ google-services.json MISSING"
+            exit 1
           fi
 
-      - name: Setup Node.js
+      - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Setup Java 21
+      - name: ☕ Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Create web
+      - name: 📁 Create web directory
         run: |
           mkdir -p www
           cp *.html www/ 2>/dev/null || true
@@ -47,12 +56,13 @@ jobs:
           echo "=== www files ==="
           ls -la www/
 
-      - name: Create package.json
+      - name: 📝 Create package.json
         run: |
           cat > package.json << 'EOF'
           {
             "name": "abshar-driver",
             "version": "1.0.0",
+            "description": "Absher Be - Driver App",
             "dependencies": {
               "@capacitor/core": "^7.0.0",
               "@capacitor/android": "^7.0.0",
@@ -64,39 +74,38 @@ jobs:
           }
           EOF
 
-      - name: Install
+      - name: 📥 Install dependencies
         run: npm install
 
-      - name: Init Capacitor
+      - name: 🏗️ Init Capacitor
         run: npx cap init "Absher" com.abshar.driver --web-dir=www --confirm
 
-      - name: Add Android
+      - name: 🔧 Add Android platform
         run: |
           npx cap add android
           npx cap sync android
 
-      - name: Copy google-services
+      - name: 📋 Copy google-services.json
         run: |
-          if [ -f "google-services.json" ]; then
-            cp google-services.json android/app/google-services.json
-            echo "✅ Copied!"
-            cat android/app/google-services.json | grep package_name
-          else
-            echo "❌ google-services.json not found in repo!"
-            exit 1
-          fi
+          cp google-services.json android/app/google-services.json
+          echo "=== Copied ==="
+          cat android/app/google-services.json | grep package_name
 
-      - name: Add plugin
-        run: sed -i "1a apply plugin: 'com.google.gms.google-services'" android/app/build.gradle
+      - name: 🎨 Add google-services plugin
+        run: |
+          sed -i "1a apply plugin: 'com.google.gms.google-services'" android/app/build.gradle
+          echo "=== First 5 lines ==="
+          head -5 android/app/build.gradle
 
-      - name: Build
+      - name: 🔨 Build APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload
+      - name: 📤 Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: abshar-driver-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
