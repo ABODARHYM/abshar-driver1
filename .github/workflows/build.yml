@@ -78,7 +78,7 @@ jobs:
         run: npm install
 
       - name: 🏗️ Init Capacitor
-        run: npx cap init "Absher" com.abshar.driver --web-dir=www --confirm
+        run: npx cap init "Absher" com.abshar.driver --web-dir=www
 
       - name: 🔧 Add Android platform
         run: |
