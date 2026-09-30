@@ -21,7 +21,7 @@ jobs:
           if [ -f "google-services.json" ]; then
             echo "✅ google-services.json exists!"
           else
-            echo "❌ google-services.json MISSING!"
+            echo " google-services.json MISSING!"
           fi
 
       - name: Setup Node.js
