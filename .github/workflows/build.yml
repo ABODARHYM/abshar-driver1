@@ -85,6 +85,11 @@ jobs:
           npx cap add android
           npx cap sync android
 
+      - name: 📱 Install Push Plugin
+        run: |
+          npm install @capacitor/push-notifications
+          npx cap sync android
+
       - name: 📋 Copy google-services.json
         run: |
           cp google-services.json android/app/google-services.json
