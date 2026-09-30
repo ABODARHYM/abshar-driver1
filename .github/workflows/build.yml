@@ -1,0 +1,104 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: ☕ Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      
+      - name: 🤖 Setup Android SDK
+        uses: android-actions/setup-android@v3
+      
+      - name: 📁 Prepare web directory
+        run: |
+          mkdir -p www
+          cp *.html www/ 2>/dev/null || true
+          cp *.js www/ 2>/dev/null || true
+          cp *.css www/ 2>/dev/null || true
+          cp *.png www/ 2>/dev/null || true
+          cp *.mp3 www/ 2>/dev/null || true
+          cp *.json www/ 2>/dev/null || true
+          echo "=== الملفات المنسوخة ==="
+          ls -la www/
+      
+      - name: 📦 Create package.json
+        run: |
+          cat > package.json << 'EOF'
+          {
+            "name": "abshar-driver",
+            "version": "1.0.0",
+            "description": "Absher Be - Driver App",
+            "main": "index.js",
+            "scripts": {
+              "build": "echo 'No build step'"
+            },
+            "author": "ABODARHYM",
+            "license": "MIT",
+            "dependencies": {
+              "@capacitor/core": "^7.0.0",
+              "@capacitor/android": "^7.0.0",
+              "@capacitor/push-notifications": "^7.0.0"
+            },
+            "devDependencies": {
+              "@capacitor/cli": "^7.0.0"
+            }
+          }
+          EOF
+      
+      - name: 📥 Install dependencies
+        run: npm install
+      
+      - name: 🏗️ Init Capacitor
+        run: |
+          npx cap init "أبشر بي - المندوب" com.abshar.driver --web-dir=www || true
+      
+      - name: 🔧 Add Android platform
+        run: |
+          npx cap add android || true
+          npx cap sync android
+      
+      - name: 📋 Copy google-services.json
+        run: |
+          if [ -f "google-services.json" ]; then
+            cp google-services.json android/app/google-services.json
+            echo "✅ google-services.json copied"
+          else
+            echo "⚠️ google-services.json not found"
+          fi
+      
+      - name: 🎨 Add google-services plugin
+        run: |
+          sed -i "1a apply plugin: 'com.google.gms.google-services'" android/app/build.gradle
+          echo "=== build.gradle first 5 lines ==="
+          head -5 android/app/build.gradle
+      
+      - name: 🔨 Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      
+      - name: 📤 Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: abshar-driver-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
