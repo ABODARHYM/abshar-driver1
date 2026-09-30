@@ -24,10 +24,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       
-      - name: 🤖 Setup Android SDK
-        uses: android-actions/setup-android@v3
-      
-      - name: 📁 Prepare web directory
+      - name: 📁 Create web directory
         run: |
           mkdir -p www
           cp *.html www/ 2>/dev/null || true
@@ -36,7 +33,7 @@ jobs:
           cp *.png www/ 2>/dev/null || true
           cp *.mp3 www/ 2>/dev/null || true
           cp *.json www/ 2>/dev/null || true
-          echo "=== الملفات المنسوخة ==="
+          echo "=== Web files ==="
           ls -la www/
       
       - name: 📦 Create package.json
@@ -46,12 +43,9 @@ jobs:
             "name": "abshar-driver",
             "version": "1.0.0",
             "description": "Absher Be - Driver App",
-            "main": "index.js",
             "scripts": {
               "build": "echo 'No build step'"
             },
-            "author": "ABODARHYM",
-            "license": "MIT",
             "dependencies": {
               "@capacitor/core": "^7.0.0",
               "@capacitor/android": "^7.0.0",
@@ -68,7 +62,7 @@ jobs:
       
       - name: 🏗️ Init Capacitor
         run: |
-          npx cap init "أبشر بي - المندوب" com.abshar.driver --web-dir=www || true
+          npx cap init "Absher Be Driver" com.abshar.driver --web-dir=www || true
       
       - name: 🔧 Add Android platform
         run: |
@@ -80,14 +74,11 @@ jobs:
           if [ -f "google-services.json" ]; then
             cp google-services.json android/app/google-services.json
             echo "✅ google-services.json copied"
-          else
-            echo "⚠️ google-services.json not found"
           fi
       
       - name: 🎨 Add google-services plugin
         run: |
           sed -i "1a apply plugin: 'com.google.gms.google-services'" android/app/build.gradle
-          echo "=== build.gradle first 5 lines ==="
           head -5 android/app/build.gradle
       
       - name: 🔨 Build APK
