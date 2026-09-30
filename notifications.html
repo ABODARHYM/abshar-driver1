@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إشعارات المندوب - أبشر بي</title>
+    <meta name="theme-color" content="#e67e22">
+    <meta name="description" content="إشعارات المندوب في أبشر بي">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <link rel="stylesheet" href="branding.css">
+    <link rel="stylesheet" href="responsive.css">
+    <script src="zain-core.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f0e7 0%, #e8e0d5 100%);
+            min-height: 100vh;
+        }
+        
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1A1A2E, #e67e22);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(230, 126, 34, 0.3);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .back-btn {
+            width: 42px;
+            height: 42px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            border: none;
+            font-family: inherit;
+        }
+        
+        .back-btn:hover {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .header h1 i { color: #f39c12; }
+        
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(243, 156, 18, 0.5);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: inherit;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+        
+        .header-btn:hover {
+            background: #e67e22;
+            color: white;
+        }
+        
+        .main-content {
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        /* ============ Stats ============ */
+        .notif-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .notif-stat {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-top: 3px solid transparent;
+        }
+        
+        body.dark-mode .notif-stat { background: #1e1e2e; }
+        
+        .notif-stat:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .notif-stat i {
+            font-size: 20px;
+            color: #e67e22;
+            margin-bottom: 6px;
+            display: block;
+        }
+        
+        .notif-stat .num {
+            font-size: 22px;
+            font-weight: 900;
+            color: #e67e22;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .notif-stat .lbl {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        body.dark-mode .notif-stat .lbl { color: #94a3b8; }
+        
+        /* ============ Filter Tabs ============ */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            scrollbar-width: thin;
+        }
+        
+        .filter-tab {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            font-family: inherit;
+            transition: all 0.3s;
+            white-space: nowrap;
+            color: #333;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        body.dark-mode .filter-tab {
+            background: #1e1e2e;
+            color: #f1f5f9;
+        }
+        
+        .filter-tab.active,
+        .filter-tab:hover {
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: white;
+        }
+        
+        .filter-tab .count-badge {
+            background: rgba(255,255,255,0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+        
+        /* ============ Notifications List ============ */
+        .notifications-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .notif-card {
+            background: white;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+            transition: all 0.3s;
+            border-right: 5px solid #e67e22;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        body.dark-mode .notif-card { background: #1e1e2e; }
+        
+        .notif-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .notif-card.unread {
+            background: linear-gradient(135deg, #fff5e6, #ffe8cc);
+            border-right-width: 6px;
+        }
+        
+        body.dark-mode .notif-card.unread {
+            background: linear-gradient(135deg, #3a2a1a, #2a1a10);
+        }
+        
+        .notif-card.unread::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: -10px;
+            width: 12px;
+            height: 12px;
+            background: #E74C3C;
+            border-radius: 50%;
+            border: 3px solid white;
+            animation: pulse 2s infinite;
+        }
+        
+        body.dark-mode .notif-card.unread::before {
+            border-color: #1e1e2e;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+        
+        /* Type colors */
+        .notif-card.type-order { border-right-color: #E67E22; }
+        .notif-card.type-personal { border-right-color: #E74C3C; background: linear-gradient(135deg, #fff5f5, #ffe8e8); }
+        .notif-card.type-success { border-right-color: #27AE60; }
+        .notif-card.type-info { border-right-color: #3498DB; }
+        .notif-card.type-warning { border-right-color: #F39C12; }
+        .notif-card.type-error { border-right-color: #E74C3C; }
+        
+        .notif-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #E67E22, #F39C12);
+        }
+        
+        .notif-card.type-personal .notif-icon {
+            background: linear-gradient(135deg, #E74C3C, #C0392B);
+        }
+        
+        .notif-card.type-success .notif-icon {
+            background: linear-gradient(135deg, #27AE60, #2ECC71);
+        }
+        
+        .notif-card.type-info .notif-icon {
+            background: linear-gradient(135deg, #3498DB, #5DADE2);
+        }
+        
+        .notif-body {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .notif-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #e67e22;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        
+        body.dark-mode .notif-title { color: #f39c12; }
+        
+        .notif-text {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        body.dark-mode .notif-text { color: #94a3b8; }
+        
+        .notif-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 11px;
+            color: #999;
+            flex-wrap: wrap;
+        }
+        
+        .notif-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .notif-meta i {
+            font-size: 10px;
+            color: #e67e22;
+        }
+        
+        .notif-type-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+            background: #E67E22;
+        }
+        
+        .notif-card.type-personal .notif-type-badge { background: #E74C3C; }
+        .notif-card.type-success .notif-type-badge { background: #27AE60; }
+        .notif-card.type-info .notif-type-badge { background: #3498DB; }
+        
+        .notif-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .mini-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 11px;
+            font-family: inherit;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: white;
+        }
+        
+        .mini-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+        
+        .btn-mark-read { background: #27AE60; }
+        .btn-view-order { background: #E67E22; }
+        .btn-accept { background: #E74C3C; }
+        .btn-delete { background: #95A5A6; }
+        
+        /* ============ Empty ============ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+        }
+        
+        body.dark-mode .empty-state { background: #1e1e2e; }
+        
+        .empty-state .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .empty-state h3 {
+            color: #e67e22;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        
+        .empty-state p {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .empty-state button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.3);
+        }
+        
+        /* ============ Loading ============ */
+        .loading-spinner {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .loading-spinner i {
+            font-size: 40px;
+            color: #e67e22;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-spinner p {
+            margin-top: 15px;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <button class="back-btn" onclick="window.location.href='drivers.html'">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            <h1><i class="fas fa-bell"></i> إشعاراتي</h1>
+        </div>
+        
+        <div class="header-actions">
+            <button class="header-btn" onclick="markAllAsRead()">
+                <i class="fas fa-check-double"></i> قراءة الكل
+            </button>
+            <button class="header-btn" onclick="Zain.toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="notif-stats" id="notifStats"></div>
+        
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filterNotifications('all', this)">
+                <i class="fas fa-list"></i> الكل
+                <span class="count-badge" id="countAll">0</span>
+            </button>
+            <button class="filter-tab" onclick="filterNotifications('unread', this)">
+                <i class="fas fa-circle"></i> غير مقروء
+                <span class="count-badge" id="countUnread">0</span>
+            </button>
+            <button class="filter-tab" onclick="filterNotifications('personal', this)">
+                ⭐ موجهة إليك
+                <span class="count-badge" id="countPersonal">0</span>
+            </button>
+            <button class="filter-tab" onclick="filterNotifications('orders', this)">
+                📦 طلبات جديدة
+                <span class="count-badge" id="countOrders">0</span>
+            </button>
+        </div>
+        
+        <div class="notifications-list" id="notificationsList">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>جاري تحميل الإشعارات...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // zain-driver/notifications.html - إشعارات المندوب (أبشر بي)
+        // الإصدار: 10.2.0
+        // ================================================================
+        
+        let allNotifications = [];
+        let filteredNotifications = [];
+        let currentFilter = 'all';
+        let currentUser = null;
+        let unsubscribe = null;
+        
+        // ==================== Init ====================
+        async function init() {
+            console.log('%c🚴 أبشر بي - إشعارات المندوب', 'color: #e67e22; font-weight: bold; font-size: 14px;');
+            
+            if (typeof Zain === 'undefined') {
+                setTimeout(init, 200);
+                return;
+            }
+            
+            const user = await new Promise(function(resolve) {
+                if (Zain.auth.currentUser) {
+                    resolve(Zain.auth.currentUser);
+                    return;
+                }
+                const unsub = Zain.auth.onAuthStateChanged(function(u) {
+                    unsub();
+                    resolve(u);
+                });
+                setTimeout(function() {
+                    unsub();
+                    resolve(Zain.auth.currentUser);
+                }, 5000);
+            });
+            
+            if (!user) {
+                window.location.replace('login.html');
+                return;
+            }
+            
+            currentUser = user;
+            console.log('✅ المستخدم:', user.email);
+            
+            await loadNotifications();
+            listenForNewNotifications();
+            
+            console.log('%c🎉 الصفحة جاهزة!', 'color: #27AE60; font-weight: bold;');
+        }
+        
+        // ==================== Load ====================
+        async function loadNotifications() {
+            try {
+                const snap = await Zain.db.collection('notifications')
+                    .where('userId', '==', currentUser.uid)
+                    .get();
+                
+                allNotifications = snap.docs
+                    .map(function(d) {
+                        return Object.assign({ id: d.id }, d.data());
+                    })
+                    .sort(function(a, b) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    });
+                
+                console.log('🔔 عدد الإشعارات:', allNotifications.length);
+                
+                renderStats();
+                applyFilters();
+                
+            } catch (e) {
+                console.error('خطأ:', e);
+                document.getElementById('notificationsList').innerHTML = 
+                    '<div class="empty-state">' +
+                        '<div class="emoji">⚠️</div>' +
+                        '<h3>خطأ في التحميل</h3>' +
+                        '<p>لا يمكن تحميل الإشعارات</p>' +
+                        '<button onclick="loadNotifications()">' +
+                            '<i class="fas fa-sync-alt"></i> إعادة المحاولة' +
+                        '</button>' +
+                    '</div>';
+            }
+        }
+        
+        // ==================== Listen ====================
+        function listenForNewNotifications() {
+            if (unsubscribe) unsubscribe();
+            
+            unsubscribe = Zain.db.collection('notifications')
+                .where('userId', '==', currentUser.uid)
+                .onSnapshot(function(snapshot) {
+                    snapshot.docChanges().forEach(function(change) {
+                        if (change.type === 'added') {
+                            const notif = change.doc.data();
+                            const age = Date.now() - new Date(notif.createdAt).getTime();
+                            
+                            if (age < 15000 && !notif.read) {
+                                Zain.toast('🔔 ' + notif.title, 'info');
+                                playSound(notif.type);
+                            }
+                        }
+                    });
+                    
+                    allNotifications = snapshot.docs
+                        .map(function(d) {
+                            return Object.assign({ id: d.id }, d.data());
+                        })
+                        .sort(function(a, b) {
+                            return new Date(b.createdAt) - new Date(a.createdAt);
+                        });
+                    
+                    renderStats();
+                    applyFilters();
+                });
+        }
+        
+        // ==================== Sound ====================
+        function playSound(type) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                if (type === 'personal') {
+                    osc.frequency.value = 1000;
+                    gain.gain.setValueAtTime(0.4, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                } else {
+                    osc.frequency.value = 800;
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                }
+                
+                osc.type = 'sine';
+                osc.start();
+                osc.stop(ctx.currentTime + 0.4);
+            } catch (e) {}
+        }
+        
+        // ==================== Stats ====================
+        function renderStats() {
+            const total = allNotifications.length;
+            const unread = allNotifications.filter(function(n) { return !n.read; }).length;
+            const today = allNotifications.filter(function(n) {
+                return Zain.Helpers.isToday(n.createdAt);
+            }).length;
+            const personal = allNotifications.filter(function(n) {
+                return n.type === 'personal';
+            }).length;
+            
+            const stats = [
+                { icon: 'fas fa-bell', value: total, label: 'كل الإشعارات', color: '#E67E22' },
+                { icon: 'fas fa-circle', value: unread, label: 'غير مقروء', color: '#E74C3C' },
+                { icon: 'fas fa-star', value: personal, label: 'موجهة إليك', color: '#E74C3C' },
+                { icon: 'fas fa-calendar-day', value: today, label: 'اليوم', color: '#27AE60' }
+            ];
+            
+            document.getElementById('notifStats').innerHTML = stats.map(function(s) {
+                return '<div class="notif-stat" style="border-top-color: ' + s.color + ';">' +
+                    '<i class="' + s.icon + '" style="color: ' + s.color + ';"></i>' +
+                    '<div class="num" style="color: ' + s.color + ';">' + s.value + '</div>' +
+                    '<div class="lbl">' + s.label + '</div>' +
+                '</div>';
+            }).join('');
+        }
+        
+        // ==================== Filter ====================
+        function filterNotifications(filter, btn) {
+            currentFilter = filter;
+            
+            document.querySelectorAll('.filter-tab').forEach(function(t) {
+                t.classList.remove('active');
+            });
+            
+            if (btn) btn.classList.add('active');
+            applyFilters();
+        }
+        
+        function applyFilters() {
+            switch (currentFilter) {
+                case 'all':
+                    filteredNotifications = allNotifications;
+                    break;
+                case 'unread':
+                    filteredNotifications = allNotifications.filter(function(n) {
+                        return !n.read;
+                    });
+                    break;
+                case 'personal':
+                    filteredNotifications = allNotifications.filter(function(n) {
+                        return n.type === 'personal';
+                    });
+                    break;
+                case 'orders':
+                    filteredNotifications = allNotifications.filter(function(n) {
+                        return n.type === 'order';
+                    });
+                    break;
+                default:
+                    filteredNotifications = allNotifications;
+            }
+            
+            document.getElementById('countAll').textContent = allNotifications.length;
+            document.getElementById('countUnread').textContent = 
+                allNotifications.filter(function(n) { return !n.read; }).length;
+            document.getElementById('countPersonal').textContent = 
+                allNotifications.filter(function(n) { return n.type === 'personal'; }).length;
+            document.getElementById('countOrders').textContent = 
+                allNotifications.filter(function(n) { return n.type === 'order'; }).length;
+            
+            renderNotifications();
+        }
+        
+        // ==================== Render ====================
+        function renderNotifications() {
+            const container = document.getElementById('notificationsList');
+            
+            if (filteredNotifications.length === 0) {
+                const messages = {
+                    all: { emoji: '🔔', title: 'لا توجد إشعارات', text: 'ستظهر هنا إشعارات الطلبات والأرباح' },
+                    unread: { emoji: '✅', title: 'لا توجد إشعارات غير مقروءة', text: 'لقد قرأت جميع الإشعارات' },
+                    personal: { emoji: '⭐', title: 'لا توجد طلبات موجهة إليك', text: 'ستظهر هنا الطلبات المخصصة لك' },
+                    orders: { emoji: '📦', title: 'لا توجد طلبات جديدة', text: 'ستظهر هنا الطلبات المتاحة' }
+                };
+                
+                const msg = messages[currentFilter] || messages.all;
+                
+                container.innerHTML = 
+                    '<div class="empty-state">' +
+                        '<div class="emoji">' + msg.emoji + '</div>' +
+                        '<h3>' + msg.title + '</h3>' +
+                        '<p>' + msg.text + '</p>' +
+                        '<button onclick="window.location.href=\'drivers.html\'">' +
+                            '<i class="fas fa-motorcycle"></i> العودة للوحة' +
+                        '</button>' +
+                    '</div>';
+                return;
+            }
+            
+            container.innerHTML = filteredNotifications.map(function(notif) {
+                const type = notif.type || 'info';
+                const icon = notif.icon || getDefaultIcon(type);
+                const typeName = getTypeName(type);
+                
+                return '<div class="notif-card type-' + type + (notif.read ? '' : ' unread') + '" ' +
+                    'onclick="openNotification(\'' + notif.id + '\')">' +
+                    
+                    '<div class="notif-icon">' +
+                        '<i class="fas ' + icon + '"></i>' +
+                    '</div>' +
+                    
+                    '<div class="notif-body">' +
+                        '<div class="notif-title">' + (notif.title || 'إشعار') + '</div>' +
+                        '<div class="notif-text">' + (notif.body || '') + '</div>' +
+                        
+                        '<div class="notif-meta">' +
+                            '<span>' +
+                                '<i class="fas fa-clock"></i> ' +
+                                Zain.Helpers.getRelativeTime(notif.createdAt) +
+                            '</span>' +
+                            '<span class="notif-type-badge">' + typeName + '</span>' +
+                        '</div>' +
+                        
+                        '<div class="notif-actions">' +
+                            (!notif.read ? 
+                                '<button class="mini-btn btn-mark-read" onclick="event.stopPropagation(); markAsRead(\'' + notif.id + '\')">' +
+                                    '<i class="fas fa-check"></i> قرأت' +
+                                '</button>' 
+                            : '') +
+                            
+                            (notif.data && notif.data.orderId ? 
+                                '<button class="mini-btn btn-view-order" onclick="event.stopPropagation(); viewOrder(\'' + notif.data.orderId + '\')">' +
+                                    '<i class="fas fa-eye"></i> عرض الطلب' +
+                                '</button>' 
+                            : '') +
+                            
+                            '<button class="mini-btn btn-delete" onclick="event.stopPropagation(); deleteNotification(\'' + notif.id + '\')">' +
+                                '<i class="fas fa-trash"></i> حذف' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+        
+        // ==================== Helpers ====================
+        function getDefaultIcon(type) {
+            const icons = {
+                info: 'fa-info-circle',
+                success: 'fa-check-circle',
+                warning: 'fa-exclamation-triangle',
+                error: 'fa-times-circle',
+                order: 'fa-shopping-bag',
+                personal: 'fa-star'
+            };
+            return icons[type] || 'fa-bell';
+        }
+        
+        function getTypeName(type) {
+            const names = {
+                info: 'معلومة',
+                success: 'نجاح',
+                warning: 'تحذير',
+                error: 'خطأ',
+                order: 'طلب جديد',
+                personal: 'موجه إليك'
+            };
+            return names[type] || 'إشعار';
+        }
+        
+        // ==================== Open ====================
+        async function openNotification(notifId) {
+            const notif = allNotifications.find(function(n) { return n.id === notifId; });
+            if (!notif) return;
+            
+            if (!notif.read) {
+                await markAsRead(notifId);
+            }
+            
+            if (notif.data && notif.data.orderId) {
+                viewOrder(notif.data.orderId);
+            }
+        }
+        
+        // ==================== View Order ====================
+        function viewOrder(orderId) {
+            window.location.href = 'drivers.html';
+        }
+        
+        // ==================== Mark As Read ====================
+        async function markAsRead(notifId) {
+            try {
+                await Zain.db.collection('notifications').doc(notifId).update({
+                    read: true,
+                    readAt: new Date().toISOString()
+                });
+                
+                const notif = allNotifications.find(function(n) { return n.id === notifId; });
+                if (notif) notif.read = true;
+                
+                applyFilters();
+                
+            } catch (e) {
+                console.error('خطأ:', e);
+            }
+        }
+        
+        // ==================== Mark All ====================
+        async function markAllAsRead() {
+            const unreadCount = allNotifications.filter(function(n) { return !n.read; }).length;
+            
+            if (unreadCount === 0) {
+                Zain.toast('لا توجد إشعارات غير مقروءة', 'info');
+                return;
+            }
+            
+            if (!confirm('هل تريد تعليم جميع الإشعارات (' + unreadCount + ') كمقروءة؟')) return;
+            
+            try {
+                const batch = Zain.db.batch();
+                
+                allNotifications.forEach(function(notif) {
+                    if (!notif.read) {
+                        const ref = Zain.db.collection('notifications').doc(notif.id);
+                        batch.update(ref, {
+                            read: true,
+                            readAt: new Date().toISOString()
+                        });
+                    }
+                });
+                
+                await batch.commit();
+                
+                allNotifications.forEach(function(notif) {
+                    notif.read = true;
+                });
+                
+                Zain.toast('✅ تم تعليم ' + unreadCount + ' إشعار كمقروء', 'success');
+                
+                renderStats();
+                applyFilters();
+                
+            } catch (e) {
+                console.error('خطأ:', e);
+                Zain.toast('حدث خطأ', 'error');
+            }
+        }
+        
+        // ==================== Delete ====================
+        async function deleteNotification(notifId) {
+            if (!confirm('هل تريد حذف هذا الإشعار؟')) return;
+            
+            try {
+                await Zain.db.collection('notifications').doc(notifId).delete();
+                
+                allNotifications = allNotifications.filter(function(n) {
+                    return n.id !== notifId;
+                });
+                
+                Zain.toast('تم حذف الإشعار', 'info');
+                
+                renderStats();
+                applyFilters();
+                
+            } catch (e) {
+                console.error('خطأ:', e);
+                Zain.toast('حدث خطأ', 'error');
+            }
+        }
+        
+        // ==================== Start ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(init, 500);
+        });
+        
+        // ==================== Export ====================
+        window.filterNotifications = filterNotifications;
+        window.openNotification = openNotification;
+        window.markAsRead = markAsRead;
+        window.markAllAsRead = markAllAsRead;
+        window.deleteNotification = deleteNotification;
+        window.viewOrder = viewOrder;
+        
+        console.log('%c✅ notifications.html جاهز (أبشر بي - المندوب)', 'color: #27AE60; font-weight: bold;');
+    </script>
+</body>
+</html>

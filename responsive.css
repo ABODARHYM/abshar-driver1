@@ -1,0 +1,1030 @@
+/* ================================================================
+ * 📱 ABSHER BE - Responsive.css (نسخة محسّنة)
+ * ================================================================
+ * دعم كامل لجميع الأجهزة:
+ *   🍎 iPhone / iPad
+ *   🤖 Android
+ *   💻 Windows / Mac / Linux
+ *   📱 Tablets
+ * ================================================================
+ * الإصدار: v10.3.0 (مُصلح ومحسّن)
+ * التاريخ: 2026-09-29
+ * ================================================================
+ * التغييرات:
+ *   ✅ إصلاح التمرير بشكل كامل
+ *   ✅ إصلاح التقريب (Zoom)
+ *   ✅ إصلاح الأبعاد على الجوال
+ *   ✅ إصلاح استجابة اللمس
+ *   ✅ إزالة التعارضات
+ *   ✅ تقليل use of !important
+ * ================================================================ */
+
+/* ================================================================
+ * 1. إعادة تعيين شاملة (Reset)
+ * ================================================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    overflow-y: auto;
+    
+    /* ✅ مهم: لا نستخدم height: 100% - نستخدم min-height */
+    min-height: 100%;
+    
+    -webkit-overflow-scrolling: touch;
+}
+
+body {
+    /* ✅ الأبعاد الديناميكية - مهم جداً للجوال */
+    min-height: 100vh;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+    
+    /* ✅ التمرير الطبيعي - لا نمنع overflow-y */
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    
+    /* ✅ لا نستخدم overscroll-behavior-y: none (يمنع التمرير) */
+    overscroll-behavior-y: auto;
+    
+    /* ✅ منع تحديد النص على العناصر التفاعلية فقط */
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    
+    /* ✅ تحسين النص */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    
+    /* ✅ الموضع */
+    position: relative;
+    width: 100%;
+}
+
+/* ✅ منع تحديد النص للأزرار والعناصر التفاعلية فقط */
+button,
+a,
+.clickable,
+[role="button"],
+.mini-btn,
+.action-btn,
+.header-btn,
+.btn,
+.status-btn,
+.filter-btn,
+.tab-btn,
+.category-chip,
+.nav-item {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    cursor: pointer;
+}
+
+/* ✅ السماح بتحديد النص في حقول الإدخال والمحتوى */
+input,
+textarea,
+[contenteditable="true"],
+.selectable,
+p,
+h1, h2, h3, h4, h5, h6,
+span:not(.no-select),
+div:not(.no-select) {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+/* ================================================================
+ * 2. دعم iPhone Notch / Dynamic Island (Safe Area)
+ * ================================================================ */
+
+@supports (padding: env(safe-area-inset-top)) {
+    /* الهيدرات */
+    .header,
+    .main-header,
+    .admin-header,
+    .store-header,
+    .driver-header,
+    .page-header {
+        padding-top: max(12px, env(safe-area-inset-top, 0));
+        padding-left: max(20px, env(safe-area-inset-left, 0));
+        padding-right: max(20px, env(safe-area-inset-right, 0));
+    }
+    
+    /* الأزرار العائمة */
+    .cart-btn,
+    .fab,
+    .floating-btn,
+    .floating-action {
+        bottom: max(25px, calc(env(safe-area-inset-bottom, 0) + 15px));
+        left: max(25px, calc(env(safe-area-inset-left, 0) + 15px));
+    }
+    
+    /* الـ Bottom Nav */
+    .bottom-nav,
+    .tab-bar,
+    .bottom-bar {
+        padding-bottom: max(8px, env(safe-area-inset-bottom, 0));
+    }
+    
+    /* Footer */
+    footer,
+    .footer,
+    .cart-footer {
+        padding-bottom: max(15px, calc(env(safe-area-inset-bottom, 0) + 15px));
+    }
+}
+
+/* ================================================================
+ * 3. الأزرار - تحسين اللمس
+ * ================================================================ */
+
+@media (pointer: coarse) {
+    button,
+    a.btn,
+    .mini-btn,
+    .action-btn,
+    .header-btn,
+    .nav-item {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    button:active,
+    a:active,
+    .clickable:active,
+    .mini-btn:active,
+    .action-btn:active,
+    .header-btn:active {
+        transform: scale(0.97);
+        transition: transform 0.1s ease;
+    }
+}
+
+/* ✅ منع تأثيرات hover على اللمس */
+@media (hover: none) {
+    .header-btn:hover,
+    .action-card:hover,
+    .mini-btn:hover,
+    .btn:hover,
+    .hover-lift:hover {
+        transform: none;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .hover-lift:hover {
+        transform: translateY(-3px);
+    }
+}
+
+/* ================================================================
+ * 4. حقول الإدخال - منع Zoom على iOS
+ * ================================================================ */
+
+input,
+textarea,
+select,
+.form-control {
+    /* ✅ منع Zoom على iOS عند التركيز */
+    font-size: 16px;
+    
+    /* ✅ إزالة المظهر الافتراضي */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    border-radius: 12px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+/* إزالة أزرار البحث */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* إزالة أسهم الأرقام */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* ================================================================
+ * 5. التمرير السلس - Container Scroll
+ * ================================================================ */
+
+.scrollable,
+.cart-items,
+.cart-footer-content,
+.drivers-list,
+.modal-content,
+.orders-list,
+.products-grid,
+.sidebar,
+.scroll-container,
+[data-scrollable] {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+}
+
+/* ================================================================
+ * 6. Scrollbar مخصص
+ * ================================================================ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #2C5F2D, #6A7F3A);
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2C5F2D;
+}
+
+::-webkit-scrollbar-corner {
+    background: #f0f0f0;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #1e1e2e;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #D4AF37, #F4D03F);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #2C5F2D #f0f0f0;
+}
+
+body.dark-mode * {
+    scrollbar-color: #D4AF37 #1e1e2e;
+}
+
+/* ================================================================
+ * 7. إصلاحات خاصة بـ iPhone (iOS)
+ * ================================================================ */
+
+@supports (-webkit-touch-callout: none) {
+    /* ✅ استخدام -webkit-fill-available للطول الكامل */
+    .full-height,
+    .fullscreen {
+        height: 100vh;
+        height: -webkit-fill-available;
+    }
+    
+    /* ✅ GPU acceleration للعناصر المتحركة */
+    .cart-sidebar,
+    .sidebar,
+    .modal-content,
+    .header,
+    .main-header,
+    .admin-header,
+    .store-header,
+    .driver-header {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    
+    /* ✅ ضمان عدم تجاوز العرض */
+    body {
+        position: relative;
+        width: 100%;
+        overflow-x: hidden;
+    }
+    
+    /* ✅ منع Zoom عند التركيز */
+    input:focus,
+    textarea:focus,
+    select:focus {
+        font-size: 16px;
+    }
+}
+
+/* ================================================================
+ * 8. Landscape Mode - الجوالات
+ * ================================================================ */
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero,
+    .hero-section {
+        padding: 20px 15px;
+    }
+    
+    .hero-icon,
+    .logo-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .hero h1,
+    .hero-section h1 {
+        font-size: 22px;
+        margin-bottom: 8px;
+    }
+    
+    .hero p,
+    .hero-section p {
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+    
+    .header,
+    .main-header,
+    .admin-header,
+    .store-header,
+    .driver-header {
+        padding: 8px 15px;
+    }
+    
+    .bottom-nav {
+        padding: 4px 0;
+    }
+    
+    .nav-item {
+        padding: 4px;
+    }
+    
+    .nav-item i {
+        font-size: 16px;
+    }
+    
+    .nav-item span {
+        font-size: 9px;
+    }
+}
+
+/* ================================================================
+ * 9. الأجهزة اللوحية (Tablets)
+ * ================================================================ */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .main-content {
+        padding: 30px 40px;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+    
+    .mini-btn,
+    .action-btn {
+        padding: 12px 20px;
+    }
+}
+
+/* ================================================================
+ * 10. الشاشات الكبيرة (Desktop)
+ * ================================================================ */
+
+@media (min-width: 1600px) {
+    body {
+        font-size: 15px;
+    }
+    
+    .main-content,
+    .main-content-wrapper,
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+@media (min-width: 1920px) {
+    .main-content,
+    .main-content-wrapper,
+    .container {
+        max-width: 1600px;
+    }
+}
+
+/* ================================================================
+ * 11. الشاشات الصغيرة (Mobile)
+ * ================================================================ */
+
+@media (max-width: 480px) {
+    html {
+        font-size: 14px;
+    }
+    
+    .main-content {
+        padding: 12px;
+        padding-left: calc(12px + env(safe-area-inset-left, 0));
+        padding-right: calc(12px + env(safe-area-inset-right, 0));
+    }
+    
+    button,
+    input,
+    select,
+    textarea {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 360px) {
+    html {
+        font-size: 13px;
+    }
+    
+    .main-content {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 320px) {
+    body {
+        font-size: 12px;
+    }
+    
+    .header h1 {
+        font-size: 14px;
+    }
+    
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 280px) {
+    body {
+        font-size: 11px;
+    }
+    
+    .main-content {
+        padding: 8px;
+    }
+}
+
+/* ================================================================
+ * 12. الشاشات العالية الدقة (Retina)
+ * ================================================================ */
+
+@media (-webkit-min-device-pixel-ratio: 2),
+       (min-resolution: 192dpi) {
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* ================================================================
+ * 13. Reduced Motion (إمكانية الوصول)
+ * ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms;
+        animation-iteration-count: 1;
+        transition-duration: 0.01ms;
+        scroll-behavior: auto;
+    }
+}
+
+/* ================================================================
+ * 14. إصلاحات الصور
+ * ================================================================ */
+
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+img,
+video {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.image-cover {
+    object-fit: cover;
+}
+
+.image-contain {
+    object-fit: contain;
+}
+
+/* ================================================================
+ * 15. إصلاح النصوص الطويلة
+ * ================================================================ */
+
+.ellipsis,
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.text-break {
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ================================================================
+ * 16. إصلاح Modal و Overlay
+ * ================================================================ */
+
+.modal,
+.overlay,
+.dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+}
+
+.modal-content,
+.dialog-content {
+    max-height: 90vh;
+    max-height: 90dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ✅ إخفاء الـ modal غير النشط */
+.modal:not(.active) {
+    display: none;
+    pointer-events: none;
+}
+
+/* ================================================================
+ * 17. منع Scroll عند فتح Modal (بدون القفز)
+ * ================================================================ */
+
+body.modal-open {
+    overflow: hidden;
+    /* ✅ بدون position: fixed لتجنب القفز */
+    padding-right: var(--scrollbar-width, 0);
+}
+
+/* ================================================================
+ * 18. إصلاحات RTL
+ * ================================================================ */
+
+[dir="rtl"] {
+    text-align: right;
+}
+
+[dir="rtl"] input:not([dir="ltr"]),
+[dir="rtl"] textarea:not([dir="ltr"]) {
+    text-align: right;
+}
+
+[dir="rtl"] .number,
+[dir="rtl"] .ltr {
+    direction: ltr;
+    display: inline-block;
+    unicode-bidi: embed;
+}
+
+[dir="rtl"] .rtl-flip {
+    transform: scaleX(-1);
+}
+
+/* ================================================================
+ * 19. إصلاحات Header و Bottom Nav
+ * ================================================================ */
+
+/* ✅ Header ثابت أعلى الصفحة */
+.header,
+.main-header,
+.admin-header,
+.store-header,
+.driver-header,
+.page-header,
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* ✅ Bottom Nav ثابت أسفل الصفحة */
+.bottom-nav,
+.tab-bar,
+.bottom-bar,
+.nav-bottom,
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* ✅ إضافة مساحة للـ body بسبب الـ bottom nav */
+body.has-bottom-nav {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0));
+}
+
+/* ================================================================
+ * 20. إصلاح Main Content
+ * ================================================================ */
+
+.main-content {
+    padding: 20px;
+    padding-left: calc(20px + env(safe-area-inset-left, 0));
+    padding-right: calc(20px + env(safe-area-inset-right, 0));
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    /* ✅ لا نستخدم overflow: hidden أو height محددة */
+}
+
+/* ================================================================
+ * 21. إصلاح الصفحات (Pages)
+ * ================================================================ */
+
+.page {
+    display: none;
+    animation: fadeIn 0.3s ease;
+    /* ✅ التمرير الطبيعي */
+    overflow: visible;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================================================================
+ * 22. منع Pull-to-Refresh (اختياري)
+ * ================================================================ */
+
+/* ⚠️ استخدم هذا الصنف فقط للأماكن التي تحتاجها */
+.prevent-pull-refresh {
+    overscroll-behavior-y: contain;
+}
+
+/* ================================================================
+ * 23. إصلاح الأبعاد الديناميكية
+ * ================================================================ */
+
+.vh-100 {
+    height: 100vh;
+    height: 100dvh;
+}
+
+.min-vh-100 {
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* ================================================================
+ * 24. دعم الوضع المظلم
+ * ================================================================ */
+
+body.dark-mode img {
+    opacity: 0.9;
+}
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        color-scheme: dark;
+    }
+}
+
+/* ================================================================
+ * 25. Print Styles
+ * ================================================================ */
+
+@media print {
+    .header,
+    .main-header,
+    .admin-header,
+    .store-header,
+    .driver-header,
+    .header-actions,
+    .bottom-nav,
+    .cart-btn,
+    .fab,
+    .floating-btn,
+    .no-print {
+        display: none;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    a {
+        text-decoration: none;
+        color: black;
+    }
+}
+
+/* ================================================================
+ * 26. تحسينات الأداء
+ * ================================================================ */
+
+.will-change-transform {
+    will-change: transform;
+}
+
+.will-change-opacity {
+    will-change: opacity;
+}
+
+.gpu-accelerated,
+.gpu-accelerate {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.lazy-load {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 200px;
+}
+
+/* ================================================================
+ * 27. أنماط مساعدة
+ * ================================================================ */
+
+.no-select {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.text-select {
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+.no-tap-highlight {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ✅ إزالة أي تنسيق افتراضي للأزرار */
+button {
+    font-family: inherit;
+    outline: none;
+    border: none;
+    background: transparent;
+}
+
+button:focus-visible {
+    outline: 2px solid #D4AF37;
+    outline-offset: 2px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:focus-visible {
+    outline: 2px solid #D4AF37;
+    outline-offset: 2px;
+}
+
+/* ================================================================
+ * 28. Container Classes
+ * ================================================================ */
+
+.zain-container,
+.zain-container-fluid,
+.main-content-wrapper,
+.container,
+.admin-container {
+    width: 100%;
+    margin: 0 auto;
+    /* ✅ التمرير الطبيعي */
+    overflow: visible;
+}
+
+.zain-container {
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.zain-container-fluid {
+    max-width: 100%;
+    padding: 0 20px;
+}
+
+/* ================================================================
+ * 29. Flex Helpers
+ * ================================================================ */
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ================================================================
+ * 30. إصلاحات الأزرار العائمة
+ * ================================================================ */
+
+.floating-btn,
+.fab {
+    position: fixed;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s;
+    touch-action: manipulation;
+}
+
+.floating-btn:active,
+.fab:active {
+    transform: scale(0.95);
+}
+
+/* ================================================================
+ * 31. حماية من التمرير الأفقي غير المرغوب
+ * ================================================================ */
+
+.no-horizontal-scroll {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* ================================================================
+ * 32. إصلاح النصوص المقطوعة في النوافذ المنبثقة
+ * ================================================================ */
+
+.popup,
+.tooltip {
+    max-width: calc(100vw - 30px);
+    word-wrap: break-word;
+}
+
+/* ================================================================
+ * 33. حماية الحقول من التمدد
+ * ================================================================ */
+
+input,
+textarea,
+select {
+    max-width: 100%;
+}
+
+/* ================================================================
+ * نهاية الملف - v10.3.0
+ * ================================================================ */
+/* ============ 🗺️ أماكن مأرب الذكية ============ */
+.marib-place-marker {
+    background: transparent !important;
+    border: none !important;
+}
+
+.marib-place-marker > div {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+}
+
+.marib-place-marker > div:hover {
+    transform: scale(1.15) translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4) !important;
+}
+
+.store-marker,
+.customer-marker,
+.driver-marker {
+    background: transparent !important;
+    border: none !important;
+    text-align: center;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+    font-size: 28px;
+}
+
+/* ✅ تحسين نافذة التفاصيل */
+.leaflet-popup-content-wrapper {
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    border: 2px solid #e67e22;
+}
+
+.leaflet-popup-content {
+    margin: 12px 15px;
+    font-family: 'Cairo', sans-serif;
+    line-height: 1.6;
+}
+
+.leaflet-popup-tip {
+    border-top-color: #e67e22;
+}
+
+/* ✅ زر التحكم بالطبقات */
+.leaflet-control-layers {
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+    font-family: 'Cairo', sans-serif;
+}
+
+.leaflet-control-layers-toggle {
+    background-size: 22px 22px;
+}

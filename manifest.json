@@ -1,0 +1,84 @@
+{
+  "name": "أبشر بي - المندوب",
+  "short_name": "أبشر بي",
+  "description": "تطبيق المندوب - أبشر بي للتوصيل",
+  "start_url": "./drivers.html",
+  "scope": "./",
+  "id": "abshar-driver-app",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#e67e22",
+  "theme_color": "#e67e22",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["business", "productivity", "food"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "./icon-48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "الطلبات المتاحة",
+      "short_name": "الطلبات",
+      "description": "عرض الطلبات المتاحة",
+      "url": "./drivers.html",
+      "icons": [
+        {
+          "src": "./icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "حسابي",
+      "short_name": "حسابي",
+      "description": "الملف الشخصي",
+      "url": "./drivers.html#profile",
+      "icons": [
+        {
+          "src": "./icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [],
+  "related_applications": [],
+  "handle_links": "preferred"
+}

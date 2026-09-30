@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أبشر بي - المندوب</title>
+    <meta name="theme-color" content="#e67e22">
+    <meta name="description" content="لوحة المندوب في أبشر بي">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <link rel="stylesheet" href="branding.css">
+    <link rel="stylesheet" href="responsive.css">
+    <script src="zain-core.js"></script>
+    <script src="sound-system.js"></script>
+   
+  <style>
+      
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1A1A2E 0%, #e67e22 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '🛵';
+            position: fixed;
+            font-size: 500px;
+            opacity: 0.03;
+            top: 50%;
+            right: -150px;
+            transform: translateY(-50%) rotate(-15deg);
+            pointer-events: none;
+        }
+        
+        .loading-screen {
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .driver-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin: 0 auto 25px;
+            color: white;
+            box-shadow: 0 20px 60px rgba(230, 126, 34, 0.4);
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .loading-screen h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #FFFFFF, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .loading-screen .brand-en {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #f39c12;
+            letter-spacing: 6px;
+            margin-bottom: 30px;
+        }
+        
+        .loading-screen p {
+            font-size: 15px;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.15);
+            border-top-color: #f39c12;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .status-text {
+            font-size: 14px;
+            color: #f39c12;
+            margin-top: 20px;
+            font-weight: 600;
+            min-height: 20px;
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+        
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .feature-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(243, 156, 18, 0.15);
+            border: 2px solid rgba(243, 156, 18, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f39c12;
+            font-size: 18px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="driver-icon">🛵</div>
+        <h1>لوحة المندوب</h1>
+        <div class="brand-en">ABSHER BE</div>
+        <p>مرحباً بك في لوحة التوصيل</p>
+        <div class="spinner"></div>
+        <div class="status-text" id="statusText">جاري التحقق...</div>
+        
+        <div class="features">
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                <span>سريع</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <span>آمن</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-star"></i></div>
+                <span>مميز</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // zain-driver/index.html - التوجيه الذكي لتطبيق المندوب
+        // الإصدار: 10.2.0
+        // ================================================================
+        
+        const HOME_PAGE = 'drivers.html';
+        const LOGIN_PAGE = 'login.html';
+        
+        function updateStatus(text) {
+            const el = document.getElementById('statusText');
+            if (el) el.textContent = text;
+        }
+        
+        async function init() {
+            console.log('%c🚴 أبشر بي - تطبيق المندوب', 'color: #e67e22; font-weight: bold; font-size: 14px;');
+            
+            if (typeof Zain === 'undefined') {
+                updateStatus('جاري تحميل النظام...');
+                setTimeout(init, 200);
+                return;
+            }
+            
+            updateStatus('جاري التحقق من الجلسة...');
+            
+            const user = await new Promise(function(resolve) {
+                if (Zain.auth.currentUser) {
+                    resolve(Zain.auth.currentUser);
+                    return;
+                }
+                const unsub = Zain.auth.onAuthStateChanged(function(u) {
+                    unsub();
+                    resolve(u);
+                });
+                setTimeout(function() {
+                    unsub();
+                    resolve(Zain.auth.currentUser);
+                }, 3000);
+            });
+            
+            if (!user) {
+                updateStatus('يجب تسجيل الدخول...');
+                console.log('❌ لا يوجد مستخدم');
+                
+                setTimeout(function() {
+                    window.location.replace(LOGIN_PAGE);
+                }, 1000);
+                return;
+            }
+            
+            console.log('✅ المستخدم:', user.email);
+            updateStatus('جاري التحقق من حساب المندوب...');
+            
+            try {
+                // التحقق من أنه مندوب
+                const driverDoc = await Zain.db.collection('drivers').doc(user.uid).get();
+                
+                if (!driverDoc.exists) {
+                    console.log('❌ ليس مندوباً');
+                    updateStatus('ليس لديك حساب مندوب');
+                    
+                    await Zain.auth.signOut();
+                    
+                    setTimeout(function() {
+                        window.location.replace(LOGIN_PAGE);
+                    }, 1500);
+                    return;
+                }
+                
+                const driverName = driverDoc.data().name || 'مندوب';
+                console.log('✅ مندوب مؤكد:', driverName);
+                updateStatus('مرحباً ' + driverName + ' 🛵');
+                
+                // تحديث الحالة لمتصل
+                try {
+                    await Zain.db.collection('drivers').doc(user.uid).update({
+                        status: 'online',
+                        lastSeen: new Date().toISOString()
+                    });
+                } catch (e) {}
+                
+                setTimeout(function() {
+                    window.location.replace(HOME_PAGE);
+                }, 800);
+                
+            } catch (error) {
+                console.error('خطأ:', error);
+                updateStatus('حدث خطأ في التحقق');
+                
+                setTimeout(function() {
+                    window.location.replace(LOGIN_PAGE);
+                }, 1500);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(init, 500);
+        });
+    </script>
+</body>
+</html>
