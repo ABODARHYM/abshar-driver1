@@ -4046,6 +4046,119 @@ async function checkAppVersion() {
     }
 }
 
+// ================================================================
+// 🔔 Capacitor Push Notifications (للـ APK)
+// ================================================================
+async function initCapacitorPush() {
+    try {
+        const isCapacitor = typeof window.Capacitor !== 'undefined' && 
+                           window.Capacitor.isNativePlatform && 
+                           window.Capacitor.isNativePlatform();
+        
+        console.log('📱 البيئة:', isCapacitor ? 'APK (Native)' : 'المتصفح');
+        
+        if (!isCapacitor) {
+            console.log('🌐 نستخدم Firebase Web FCM');
+            return;
+        }
+        
+        console.log('🚀 تهيئة Capacitor Push...');
+        
+        const { PushNotifications } = window.Capacitor.Plugins;
+        
+        if (!PushNotifications) {
+            console.error('❌ PushNotifications plugin غير مثبّت');
+            return;
+        }
+        
+        let permStatus = await PushNotifications.checkPermissions();
+        console.log('📋 حالة الإذن:', permStatus);
+        
+        if (permStatus.receive === 'prompt') {
+            permStatus = await PushNotifications.requestPermissions();
+        }
+        
+        if (permStatus.receive !== 'granted') {
+            console.warn('⚠️ المستخدم لم يمنح إذن الإشعارات');
+            return;
+        }
+        
+        console.log('✅ الإذن ممنوح');
+        
+        await PushNotifications.register();
+        console.log('📝 تم تسجيل Push Notifications');
+        
+        PushNotifications.addListener('registration', function(token) {
+            console.log('🔑 FCM Token (Native):', token.value);
+            
+            if (currentDriver && currentDriver.id) {
+                saveNativeFCMToken(token.value);
+            }
+            
+            localStorage.setItem('abshar_fcm_token_native', token.value);
+            localStorage.setItem('abshar_fcm_token', token.value);
+        });
+        
+        PushNotifications.addListener('registrationError', function(error) {
+            console.error('❌ فشل التسجيل:', error);
+        });
+        
+        PushNotifications.addListener('pushNotificationReceived', function(notification) {
+            console.log('📬 إشعار (مقدمة):', notification);
+            
+            const data = notification.data || {};
+            const type = data.type || 'personal';
+            
+            playSound(type);
+            
+            if (notification.title) {
+                Zain.toast('🔔 ' + notification.title, 'info', 8000);
+            }
+            
+            loadOrders();
+        });
+        
+        PushNotifications.addListener('pushNotificationActionPerformed', function(action) {
+            console.log('👆 تم النقر على الإشعار:', action);
+            
+            const data = action.notification.data || {};
+            const orderId = data.orderId;
+            
+            if (orderId) {
+                viewOrderDetails(orderId);
+            } else {
+                switchPage('home');
+            }
+        });
+        
+        console.log('🎉 Capacitor Push جاهز!');
+        
+    } catch (error) {
+        console.error('❌ خطأ في Capacitor Push:', error);
+    }
+}
+
+async function saveNativeFCMToken(token) {
+    try {
+        if (!currentDriver || !currentDriver.id) return;
+        
+        await Zain.db.collection('fcm_tokens').doc(currentDriver.id).set({
+            token: token,
+            userId: currentDriver.id,
+            platform: 'android',
+            type: 'native',
+            userAgent: navigator.userAgent,
+            updatedAt: new Date().toISOString()
+        }, { merge: true });
+        
+        console.log('✅ تم حفظ Native FCM Token');
+        
+    } catch (error) {
+        console.error('❌ خطأ في حفظ Token:', error);
+    }
+}
+
+window.initCapacitorPush = initCapacitorPush;
 // ✅ تصدير الدالة
 window.checkAppVersion = checkAppVersion;
         // ==================== Export ====================
